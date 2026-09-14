@@ -1,0 +1,1400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <title>Smart Health Community AI — WOGAFH | GAIC Cohort 2</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg: #07090e;
+      --card-bg: rgba(18, 24, 38, 0.88);
+      --card-border: rgba(255, 255, 255, 0.12);
+      --accent: #10b981;
+      --accent-glow: rgba(16, 185, 129, 0.4);
+      --purple: #8b5cf6;
+      --purple-glow: rgba(139, 92, 246, 0.4);
+      --pink: #ec4899;
+      --cyan: #38bdf8;
+      --amber: #f59e0b;
+      --rose: #f43f5e;
+      --text: #f8fafc;
+      --muted: #94a3b8;
+      
+      --header-h: 56px;
+      --footer-h: 74px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html, body {
+      background-color: var(--bg);
+      color: var(--text);
+      overflow: hidden;
+      height: 100%;
+      height: 100dvh;
+      width: 100vw;
+      position: relative;
+    }
+
+    /* Ambient Breathing Mesh */
+    .bg-mesh {
+      position: fixed;
+      inset: 0;
+      background: 
+        radial-gradient(circle at 12% 20%, rgba(139, 92, 246, 0.22) 0%, transparent 45%),
+        radial-gradient(circle at 88% 80%, rgba(16, 185, 129, 0.22) 0%, transparent 45%),
+        radial-gradient(circle at 50% 40%, rgba(236, 72, 153, 0.14) 0%, transparent 50%);
+      z-index: 0;
+      pointer-events: none;
+      animation: meshBreath 12s ease-in-out infinite alternate;
+    }
+
+    @keyframes meshBreath {
+      0% { transform: scale(1) rotate(0deg); opacity: 0.8; }
+      50% { transform: scale(1.06) rotate(1deg); opacity: 1; }
+      100% { transform: scale(1.02) rotate(-1deg); opacity: 0.85; }
+    }
+
+    /* Progress Track */
+    .progress-track {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 4px;
+      background: rgba(255, 255, 255, 0.08);
+      z-index: 100;
+    }
+
+    .progress-fill {
+      height: 100%;
+      width: 8.33%;
+      background: linear-gradient(90deg, var(--accent), var(--purple), var(--pink));
+      transition: width 0.35s ease;
+    }
+
+    /* Universal Header */
+    header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: var(--header-h);
+      padding: 0 max(1rem, env(safe-area-inset-left)) 0 max(1rem, env(safe-area-inset-right));
+      padding-top: env(safe-area-inset-top);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 50;
+      background: rgba(7, 9, 14, 0.88);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--card-border);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
+      font-weight: 700;
+      font-size: clamp(0.85rem, 2vw, 1.02rem);
+      white-space: nowrap;
+    }
+
+    .brand-badge {
+      background: linear-gradient(135deg, var(--accent), var(--purple));
+      color: #030712;
+      font-size: 0.65rem;
+      font-weight: 800;
+      padding: 0.2rem 0.45rem;
+      border-radius: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      box-shadow: 0 0 10px var(--accent-glow);
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .counter-pill {
+      font-family: 'Space Grotesk', monospace;
+      font-size: clamp(0.78rem, 1.8vw, 0.88rem);
+      color: var(--muted);
+      background: rgba(255, 255, 255, 0.06);
+      padding: 0.25rem 0.65rem;
+      border-radius: 20px;
+      border: 1px solid var(--card-border);
+      white-space: nowrap;
+    }
+
+    .icon-btn {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid var(--card-border);
+      color: var(--text);
+      width: 34px;
+      height: 34px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.95rem;
+      cursor: pointer;
+      touch-action: manipulation;
+    }
+
+    /* Deck Layout */
+    .deck {
+      position: relative;
+      height: 100%;
+      height: 100dvh;
+      width: 100vw;
+      z-index: 10;
+    }
+
+    .slide {
+      position: absolute;
+      top: var(--header-h);
+      bottom: var(--footer-h);
+      left: 0;
+      right: 0;
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: clamp(0.85rem, 2.5vw, 1.5rem);
+      padding-left: max(clamp(0.85rem, 2.5vw, 1.5rem), env(safe-area-inset-left));
+      padding-right: max(clamp(0.85rem, 2.5vw, 1.5rem), env(safe-area-inset-right));
+      opacity: 0;
+      transform: translateY(12px);
+      pointer-events: none;
+      transition: opacity 0.35s ease, transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(255,255,255,0.1) transparent;
+    }
+
+    .slide.active {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+
+    .slide.slide-center {
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+    }
+
+    /* Typography */
+    .badge-tag {
+      display: inline-flex;
+      align-items: center;
+      color: var(--accent);
+      font-size: clamp(0.72rem, 1.5vw, 0.82rem);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 0.35rem;
+    }
+
+    .badge-pulse {
+      animation: badgePulse 2.4s ease-in-out infinite;
+    }
+
+    @keyframes badgePulse {
+      0%, 100% { transform: scale(1); filter: drop-shadow(0 0 4px var(--accent-glow)); }
+      50% { transform: scale(1.03); filter: drop-shadow(0 0 12px var(--accent)); }
+    }
+
+    h1 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(1.85rem, 4.2vw, 3rem);
+      line-height: 1.15;
+      font-weight: 700;
+      margin-bottom: 0.75rem;
+      background: linear-gradient(135deg, #ffffff 65%, var(--muted));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    h2 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(1.35rem, 3vw, 2.1rem);
+      margin-bottom: 0.3rem;
+      line-height: 1.2;
+    }
+
+    .lead {
+      color: var(--muted);
+      font-size: clamp(0.85rem, 1.6vw, 1.05rem);
+      line-height: 1.5;
+      margin-bottom: 0.85rem;
+      max-width: 840px;
+    }
+
+    /* Grids & Cards */
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 310px), 1fr));
+      gap: 0.85rem;
+      width: 100%;
+    }
+
+    .grid-compartments {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 250px), 1fr));
+      gap: 0.8rem;
+      width: 100%;
+      position: relative;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      padding: clamp(0.9rem, 2vw, 1.25rem);
+      backdrop-filter: blur(12px);
+      box-shadow: 0 6px 20px rgba(0,0,0,0.25);
+      transition: all 0.25s ease;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    @media (hover: hover) {
+      .card:hover {
+        border-color: rgba(255, 255, 255, 0.22);
+        transform: translateY(-2px);
+      }
+    }
+
+    .card.highlight {
+      border-color: rgba(16, 185, 129, 0.4);
+      background: rgba(16, 185, 129, 0.08);
+      position: relative;
+    }
+
+    .card-icon {
+      font-size: clamp(1.25rem, 2.5vw, 1.5rem);
+      margin-bottom: 0.3rem;
+      display: inline-block;
+    }
+
+    .card h3 {
+      font-size: clamp(0.98rem, 2vw, 1.12rem);
+      margin-bottom: 0.3rem;
+      color: #fff;
+    }
+
+    .card p, .card li {
+      color: var(--muted);
+      font-size: clamp(0.82rem, 1.4vw, 0.9rem);
+      line-height: 1.5;
+    }
+
+    .card ul {
+      list-style: none;
+      margin-top: 0.45rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+
+    .card-search-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      margin-top: 0.75rem;
+      padding: 0.35rem 0.75rem;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: var(--cyan);
+      text-decoration: none;
+      font-size: 0.74rem;
+      font-weight: 600;
+      transition: all 0.2s ease;
+      width: fit-content;
+      touch-action: manipulation;
+    }
+
+    .card-search-btn:active {
+      background: rgba(56, 189, 248, 0.2);
+      border-color: var(--cyan);
+      color: #fff;
+      transform: translateY(-1px);
+    }
+
+    /* Staggered Fade-in Animation */
+    .slide[data-slide="2"].active .stagger-card {
+      animation: cardSlideBounce 0.6s cubic-bezier(0.18, 0.89, 0.32, 1.25) both;
+    }
+    .slide[data-slide="2"].active .stagger-card:nth-child(1) { animation-delay: 0.08s; }
+    .slide[data-slide="2"].active .stagger-card:nth-child(2) { animation-delay: 0.16s; }
+    .slide[data-slide="2"].active .stagger-card:nth-child(3) { animation-delay: 0.24s; }
+    .slide[data-slide="2"].active .stagger-card:nth-child(4) { animation-delay: 0.32s; }
+
+    @keyframes cardSlideBounce {
+      0% { opacity: 0; transform: translateY(22px) scale(0.97); }
+      100% { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    .particle-connect-band {
+      position: absolute;
+      top: -5px;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, transparent, var(--accent), var(--cyan), transparent);
+      background-size: 200% 100%;
+      animation: moveParticles 2.5s linear infinite;
+      border-radius: 4px;
+    }
+
+    @keyframes moveParticles {
+      0% { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
+    }
+
+    /* Slide 4 Flow Journey Tabs & Neon Grid */
+    .flow-journey-tabs {
+      display: flex;
+      gap: 0.4rem;
+      overflow-x: auto;
+      padding-bottom: 0.5rem;
+      -webkit-overflow-scrolling: touch;
+      margin-bottom: 0.65rem;
+      scrollbar-width: none;
+    }
+    .flow-journey-tabs::-webkit-scrollbar { display: none; }
+
+    .journey-tab {
+      flex: 0 0 auto;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--card-border);
+      color: var(--muted);
+      padding: 0.42rem 0.75rem;
+      border-radius: 10px;
+      font-size: clamp(0.72rem, 1.4vw, 0.8rem);
+      font-weight: 600;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.2s ease;
+      touch-action: manipulation;
+    }
+
+    .journey-tab.active {
+      background: rgba(16, 185, 129, 0.18);
+      border-color: var(--accent);
+      color: #fff;
+      box-shadow: 0 0 12px var(--accent-glow);
+    }
+
+    .diagram-canvas {
+      background: rgba(12, 16, 28, 0.95);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: clamp(0.75rem, 2vw, 1.1rem);
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .diagram-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 0.45rem;
+    }
+
+    @media (max-width: 768px) {
+      .diagram-grid { grid-template-columns: repeat(3, 1fr); }
+    }
+    @media (max-width: 480px) {
+      .diagram-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    .diag-node {
+      background: var(--card-bg);
+      border: 1.5px solid var(--card-border);
+      border-radius: 11px;
+      padding: 0.5rem 0.35rem;
+      text-align: center;
+      transition: all 0.25s ease;
+      min-height: 70px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .diag-node .icon { font-size: 1.25rem; margin-bottom: 0.15rem; }
+    .diag-node .name { font-size: 0.72rem; font-weight: 700; color: #fff; line-height: 1.15; }
+    .diag-node .sub { font-size: 0.62rem; color: var(--muted); margin-top: 0.1rem; }
+
+    .diag-node.lit-active {
+      border-color: var(--accent);
+      background: rgba(16, 185, 129, 0.18);
+      box-shadow: 0 0 16px var(--accent-glow);
+      transform: translateY(-2px);
+    }
+
+    .diag-node.lit-brain {
+      border-color: var(--purple);
+      background: rgba(139, 92, 246, 0.22);
+      box-shadow: 0 0 16px var(--purple-glow);
+      transform: translateY(-2px);
+    }
+
+    .diag-node.dimmed { opacity: 0.25; filter: grayscale(0.6); }
+
+    .diagram-description-card {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px dashed rgba(255, 255, 255, 0.16);
+      border-radius: 12px;
+      padding: 0.75rem 0.95rem;
+    }
+
+    .diagram-description-card h4 { font-size: 0.88rem; color: var(--accent); margin-bottom: 0.25rem; }
+    .diagram-description-card p { color: var(--muted); font-size: 0.82rem; line-height: 1.45; }
+
+    /* Slide 5 Parallel Tracks */
+    .track-container {
+      margin-top: 0.85rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.55rem;
+      background: rgba(0,0,0,0.35);
+      padding: 0.8rem;
+      border-radius: 12px;
+      border: 1px solid var(--card-border);
+    }
+
+    .track-lane {
+      position: relative;
+      height: 26px;
+      background: rgba(255, 255, 255, 0.04);
+      border-radius: 7px;
+      display: flex;
+      align-items: center;
+      padding: 0 0.6rem;
+      overflow: hidden;
+    }
+
+    .track-tag { font-size: 0.65rem; font-weight: 700; z-index: 2; color: #fff; }
+    .track-runner { position: absolute; top: 2px; bottom: 2px; width: 55px; border-radius: 5px; opacity: 0.7; }
+    .runner-fast { background: var(--accent); animation: runTrack 2.6s infinite ease-in-out alternate; }
+    .runner-mid  { background: var(--purple); animation: runTrack 3.8s infinite ease-in-out alternate; }
+    .runner-slow { background: var(--cyan); animation: runTrack 5.2s infinite ease-in-out alternate; }
+
+    @keyframes runTrack {
+      0% { left: 70px; }
+      100% { left: calc(100% - 65px); }
+    }
+
+    /* Slide 6 Notice Box */
+    .notice-box {
+      max-width: 680px;
+      width: 100%;
+      margin: 0 auto;
+      padding: clamp(1.4rem, 3.5vw, 2.2rem);
+      background: rgba(18, 24, 38, 0.94);
+      border: 1.5px solid rgba(16, 185, 129, 0.4);
+      border-radius: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      animation: auraGlow 3s ease-in-out infinite;
+    }
+
+    @keyframes auraGlow {
+      0%, 100% { box-shadow: 0 12px 35px rgba(0, 0, 0, 0.5), 0 0 15px rgba(16, 185, 129, 0.2); border-color: rgba(16, 185, 129, 0.35); }
+      50% { box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6), 0 0 30px rgba(16, 185, 129, 0.45); border-color: rgba(56, 189, 248, 0.6); }
+    }
+
+    /* Slide 7 Block-Stacking */
+    .stack-visual {
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+      margin-top: 0.75rem;
+    }
+
+    .stack-block {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px dashed var(--card-border);
+      padding: 0.45rem 0.75rem;
+      border-radius: 8px;
+      font-size: 0.74rem;
+      font-weight: 600;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .slide[data-slide="7"].active .stack-block:nth-child(1) { animation: stackIn 0.5s ease both 0.1s; }
+    .slide[data-slide="7"].active .stack-block:nth-child(2) { animation: stackIn 0.5s ease both 0.22s; }
+    .slide[data-slide="7"].active .stack-block:nth-child(3) { animation: stackIn 0.5s ease both 0.35s; }
+
+    @keyframes stackIn {
+      from { opacity: 0; transform: translateX(-16px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+
+    /* Slide 8 Audio Waveform */
+    .waveform-box {
+      margin-top: 0.75rem;
+      padding: 0.75rem;
+      background: rgba(0, 0, 0, 0.4);
+      border-radius: 12px;
+      border: 1px solid var(--card-border);
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+    }
+
+    .wave-bars {
+      display: flex;
+      align-items: center;
+      gap: 3px;
+      height: 32px;
+      flex-shrink: 0;
+    }
+
+    .wave-bar {
+      width: 4px;
+      border-radius: 3px;
+      background: var(--purple);
+      animation: waveScale 1.2s infinite ease-in-out alternate;
+    }
+
+    .wave-bar:nth-child(1) { height: 10px; animation-delay: 0.1s; }
+    .wave-bar:nth-child(2) { height: 24px; animation-delay: 0.2s; background: var(--pink); }
+    .wave-bar:nth-child(3) { height: 16px; animation-delay: 0.3s; }
+    .wave-bar:nth-child(4) { height: 30px; animation-delay: 0.15s; background: var(--accent); }
+    .wave-bar:nth-child(5) { height: 12px; animation-delay: 0.25s; }
+    .wave-bar:nth-child(6) { height: 26px; animation-delay: 0.35s; background: var(--cyan); }
+    .wave-bar:nth-child(7) { height: 8px; animation-delay: 0.18s; }
+
+    @keyframes waveScale {
+      0% { transform: scaleY(0.3); }
+      100% { transform: scaleY(1.3); }
+    }
+
+    /* Slide 9 Pitch Waveform */
+    .pitch-wave-container {
+      margin-top: 0.75rem;
+      background: rgba(0, 0, 0, 0.4);
+      padding: 0.7rem 0.9rem;
+      border-radius: 12px;
+      border: 1px solid var(--card-border);
+    }
+
+    .pitch-svg-line {
+      stroke: var(--accent);
+      stroke-width: 2.5;
+      fill: none;
+      stroke-dasharray: 400;
+      animation: drawPitchWave 3s infinite linear;
+    }
+
+    @keyframes drawPitchWave {
+      0% { stroke-dashoffset: 400; }
+      100% { stroke-dashoffset: 0; }
+    }
+
+    /* Slide 10 Shield Verification */
+    .shield-badge-wrap {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.35rem 0.75rem;
+      background: rgba(16, 185, 129, 0.12);
+      border: 1.5px solid var(--accent);
+      border-radius: 30px;
+      box-shadow: 0 0 14px var(--accent-glow);
+      animation: shieldPulse 2.2s infinite ease-in-out;
+      margin-bottom: 0.5rem;
+    }
+
+    @keyframes shieldPulse {
+      0%, 100% { box-shadow: 0 0 10px var(--accent-glow); }
+      50% { box-shadow: 0 0 22px rgba(16, 185, 129, 0.7); }
+    }
+
+    /* Slide 11 Metrics & Ripples */
+    .impact-metrics-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.65rem;
+      margin-top: 0.65rem;
+    }
+
+    @media (max-width: 480px) {
+      .impact-metrics-row { grid-template-columns: 1fr; }
+    }
+
+    .metric-card {
+      position: relative;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 0.85rem 0.6rem;
+      text-align: center;
+      overflow: hidden;
+    }
+
+    .metric-number {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(1.4rem, 2.5vw, 1.8rem);
+      font-weight: 700;
+      color: #fff;
+    }
+
+    .metric-label {
+      font-size: 0.7rem;
+      color: var(--muted);
+      margin-top: 0.15rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .ripple-ring {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 40px;
+      height: 40px;
+      margin: -20px 0 0 -20px;
+      border: 1.5px solid var(--accent);
+      border-radius: 50%;
+      opacity: 0;
+      animation: rippleEffect 3s infinite cubic-bezier(0, 0.2, 0.8, 1);
+      pointer-events: none;
+    }
+
+    @keyframes rippleEffect {
+      0% { transform: scale(0.4); opacity: 0.8; }
+      100% { transform: scale(3.5); opacity: 0; }
+    }
+
+    /* Slide 12 Telemetry Matrix */
+    .matrix-card {
+      background: rgba(0,0,0,0.3);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 0.75rem;
+      margin-top: 0.5rem;
+    }
+
+    .matrix-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.78rem;
+      padding: 0.35rem 0;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+    .matrix-row:last-child { border-bottom: none; }
+
+    /* Universal Footer with VLX Tools Branding */
+    footer {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: var(--footer-h);
+      padding: 0 max(1rem, env(safe-area-inset-left)) 0 max(1rem, env(safe-area-inset-right));
+      padding-bottom: env(safe-area-inset-bottom);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 50;
+      background: rgba(7, 9, 14, 0.92);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-top: 1px solid var(--card-border);
+    }
+
+    .touch-btn {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid var(--card-border);
+      color: #fff;
+      height: 42px;
+      min-width: 80px;
+      padding: 0 clamp(0.85rem, 2vw, 1.25rem);
+      border-radius: 11px;
+      font-weight: 600;
+      font-size: clamp(0.8rem, 1.6vw, 0.88rem);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.35rem;
+      cursor: pointer;
+      touch-action: manipulation;
+    }
+
+    .touch-btn:active { transform: scale(0.96); }
+
+    .touch-btn.primary {
+      background: var(--accent);
+      color: #030712;
+      font-weight: 700;
+      border: none;
+      box-shadow: 0 4px 14px var(--accent-glow);
+    }
+
+    .vlx-center-brand {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      line-height: 1.2;
+    }
+
+    .vlx-title {
+      font-size: 0.76rem;
+      font-weight: 800;
+      color: var(--accent);
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    .vlx-tagline {
+      font-size: 0.68rem;
+      color: var(--muted);
+      font-family: 'Space Grotesk', sans-serif;
+    }
+
+    @media (max-width: 580px) {
+      .vlx-tagline { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="bg-mesh"></div>
+  <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+
+  <!-- Header -->
+  <header>
+    <div class="brand">
+      <span>Smart Health Community AI</span>
+      <span class="brand-badge">WOGAFH × GAIC</span>
+    </div>
+    <div class="header-actions">
+      <div class="counter-pill" id="counterPill">01 / 12</div>
+      <button class="icon-btn" onclick="toggleFullscreen()" title="Toggle Fullscreen">⛶</button>
+    </div>
+  </header>
+
+  <!-- Deck Container -->
+  <main class="deck" id="deckContainer">
+
+    <!-- SLIDE 1: HERO -->
+    <section class="slide slide-center active" data-slide="1">
+      <div class="badge-tag badge-pulse">Women Genital & Fertility Health Foundation (WOGAFH)</div>
+      <h1>Smart Health Community AI</h1>
+      <p class="lead">
+        A voice-first, dialect-aware reproductive clinical assistant built for community health workers, traditional birth attendants (TBAs), and rural women across Nigeria in Nigerian Pidgin and Hausa.
+      </p>
+      <div>
+        <button class="touch-btn primary" onclick="nextSlide()">
+          Begin Technical Overview →
+        </button>
+      </div>
+    </section>
+
+    <!-- SLIDE 2: AIMS -->
+    <section class="slide" data-slide="2">
+      <div class="badge-tag">Project Scope & Objectives</div>
+      <h2>Core Aims of the Pilot</h2>
+      <p class="lead">
+        Bridging the reproductive healthcare gap for underserved communities that cannot express themselves in English.
+      </p>
+
+      <div class="grid-2">
+        <div class="card stagger-card">
+          <div class="card-icon" style="color: var(--accent);">🩺</div>
+          <h3>Reproductive & Fertility Health Access</h3>
+          <p>Provide private, confidential, and medically vetted clinical guidance on reproductive conditions, menstrual health, and maternal wellness directly to rural women.</p>
+        </div>
+
+        <div class="card stagger-card">
+          <div class="card-icon" style="color: var(--purple);">🤝</div>
+          <h3>Empower Frontline Caregivers</h3>
+          <p>Equip local Community Health Extension Workers (CHEWs) and Traditional Birth Attendants (TBAs) with rapid diagnostic lookup tools in their local dialects.</p>
+        </div>
+
+        <div class="card stagger-card">
+          <div class="card-icon" style="color: var(--pink);">🧬</div>
+          <h3>Gender-Differentiated Diagnostics</h3>
+          <p>Counter the systemic neglect of female health by recognizing how ailments manifest uniquely in female reproductive physiology, preventing critical misdiagnoses.</p>
+        </div>
+
+        <div class="card stagger-card">
+          <div class="card-icon" style="color: var(--cyan);">🗣️</div>
+          <h3>Overcome Language & Literacy Barriers</h3>
+          <p>Prioritize Nigerian Pidgin and Hausa for speech and text so that no woman is denied life-saving clinical insights due to an inability to speak formal English.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 3: COMPARTMENTS -->
+    <section class="slide" data-slide="3">
+      <div class="badge-tag">Technical Architecture</div>
+      <h2>Engineered System Compartments</h2>
+      <p class="lead">
+        A coordinated, open-source stack built on Hugging Face transformers, Telegram APIs, and verified clinical guidelines.
+      </p>
+
+      <div class="grid-compartments">
+        <div class="particle-connect-band"></div>
+
+        <!-- 1. Central Model -->
+        <div class="card highlight">
+          <div>
+            <div class="card-icon" style="color: var(--accent);">🧠</div>
+            <h3>Central Model (Meditron)</h3>
+            <p>EPFL’s open-source medical LLM (Meditron) orchestrated via Hugging Face <code>transformers</code> for clinical reasoning and multilingual intent parsing.</p>
+          </div>
+          <a class="card-search-btn" href="https://huggingface.co/epfl-llm/meditron-7b" target="_blank" rel="noopener noreferrer">
+            🔍 Explore Meditron
+          </a>
+        </div>
+
+        <!-- 2. STT Model -->
+        <div class="card">
+          <div>
+            <div class="card-icon" style="color: var(--purple);">🎙️</div>
+            <h3>STT Ear Module</h3>
+            <p>Meta MMS and Whisper checkpoints fine-tuned on Nigerian Pidgin and Hausa audio corpora (Mozilla Common Voice & TWB Voice).</p>
+          </div>
+          <a class="card-search-btn" href="https://huggingface.co/facebook/mms-1b-all" target="_blank" rel="noopener noreferrer">
+            🔍 Explore Meta MMS
+          </a>
+        </div>
+
+        <!-- 3. Query Model (RAG) -->
+        <div class="card">
+          <div>
+            <div class="card-icon" style="color: var(--cyan);">📚</div>
+            <h3>PDF Reference Lookup (RAG)</h3>
+            <p>Vector retrieval engine indexing the 2016 and 2022 Nigerian Standard Treatment Guidelines (STG) from the Federal Ministry of Health.</p>
+          </div>
+          <a class="card-search-btn" href="https://www.google.com/search?q=Nigeria+Standard+Treatment+Guidelines+Federal+Ministry+of+Health" target="_blank" rel="noopener noreferrer">
+            🔍 Nigerian STGs
+          </a>
+        </div>
+
+        <!-- 4. Data & Backend -->
+        <div class="card">
+          <div>
+            <div class="card-icon" style="color: var(--pink);">🗄️</div>
+            <h3>Backend & Storage</h3>
+            <p>PostgreSQL database for secure patient query logging and pattern analytics, served via a lightweight Python/Flask backend hosted on Render.</p>
+          </div>
+          <a class="card-search-btn" href="https://render.com" target="_blank" rel="noopener noreferrer">
+            🔍 Render & Postgres
+          </a>
+        </div>
+
+        <!-- 5. Delivery & Voice -->
+        <div class="card">
+          <div>
+            <div class="card-icon" style="color: var(--amber);">🔊</div>
+            <h3>TTS & Telegram Delivery</h3>
+            <p>Telethon (Telegram API) for low-bandwidth chatbot delivery, coupled with dialect TTS for natural voice note responses in Pidgin and Hausa.</p>
+          </div>
+          <a class="card-search-btn" href="https://github.com/LonamiWebs/Telethon" target="_blank" rel="noopener noreferrer">
+            🔍 Telethon API
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 4: WORK FLOW -->
+    <section class="slide" data-slide="4">
+      <div class="badge-tag">Operational Lifecycle</div>
+      <h2>System Work Flow</h2>
+      <p class="lead" style="margin-bottom: 0.5rem;">
+        Follow the 5 operational journeys tracing user data from voice note to vetted clinical guidance:
+      </p>
+
+      <div class="flow-journey-tabs">
+        <button class="journey-tab active" onclick="activateJourney(0)">1. Audio In (Ear)</button>
+        <button class="journey-tab" onclick="activateJourney(1)">2. Text In (Bypass)</button>
+        <button class="journey-tab" onclick="activateJourney(2)">3. Meditron & RAG Tool</button>
+        <button class="journey-tab" onclick="activateJourney(3)">4. Response Generation</button>
+        <button class="journey-tab" onclick="activateJourney(4)">5. Audio Out (Voice)</button>
+      </div>
+
+      <div class="diagram-canvas">
+        <div class="diagram-grid">
+          <div class="diag-node" id="node-user">
+            <div class="icon">👤</div>
+            <div class="name">User (Telegram)</div>
+            <div class="sub">Voice or Text</div>
+          </div>
+
+          <div class="diag-node" id="node-stt">
+            <div class="icon">👂</div>
+            <div class="name">STT Module</div>
+            <div class="sub">Audio → Text</div>
+          </div>
+
+          <div class="diag-node lit-brain" id="node-brain">
+            <div class="icon">🧠</div>
+            <div class="name">Meditron LLM</div>
+            <div class="sub">HF Transformers</div>
+          </div>
+
+          <div class="diag-node" id="node-tools">
+            <div class="icon">📚</div>
+            <div class="name">STG RAG Tool</div>
+            <div class="sub">2016/2022 Guidelines</div>
+          </div>
+
+          <div class="diag-node" id="node-tts">
+            <div class="icon">🔊</div>
+            <div class="name">TTS Module</div>
+            <div class="sub">Pidgin & Hausa Out</div>
+          </div>
+        </div>
+
+        <div class="diagram-description-card">
+          <h4 id="journeyTitle">🎙️ Audio Input Journey (Speech-to-Text)</h4>
+          <p id="journeyDesc">
+            When a community health worker or patient speaks a local language query into Telegram, the raw audio hits the <strong>STT Model (Ear module)</strong>, transcribing spoken dialect audio into text data.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 5: MODULAR ARCHITECTURE -->
+    <section class="slide" data-slide="5">
+      <div class="badge-tag">Engineering Methodology</div>
+      <h2>Modular Architecture & Separation of Concerns</h2>
+      <p class="lead">
+        Decoupling the system enables isolated, parallel engineering across every technical layer without blocking the pipeline.
+      </p>
+
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-icon" style="color: var(--accent);">⚡</div>
+          <h3>Independent Parallel Tracks</h3>
+          <p>Our team of engineers can fine-tune speech models, curate the PDF RAG vector store, and maintain the Telegram backend simultaneously.</p>
+          
+          <div class="track-container">
+            <div class="track-lane">
+              <span class="track-tag">STT Speech Track (MMS/Whisper)</span>
+              <div class="track-runner runner-fast"></div>
+            </div>
+            <div class="track-lane">
+              <span class="track-tag">Meditron Reasoning Core (HF)</span>
+              <div class="track-runner runner-mid"></div>
+            </div>
+            <div class="track-lane">
+              <span class="track-tag">National STG Knowledge Layer</span>
+              <div class="track-runner runner-slow"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-icon" style="color: var(--cyan);">🔌</div>
+          <h3>Plug-and-Play Upgradability</h3>
+          <p>Drop in improved local language fine-tunes or updated clinical guidelines without altering the core reasoning orchestrator.</p>
+          <ul>
+            <li>• <strong>Standardized JSON Contracts:</strong> Guarantees clean communication between Flask, Meditron, and Telegram.</li>
+            <li>• <strong>Zero Downtime:</strong> Update dialect acoustic models without taking down the clinical RAG engine.</li>
+            <li>• <strong>Fault Isolation:</strong> Audio pipeline downtime falls back automatically to direct text chat.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 6: TRANSITION NOTICE -->
+    <section class="slide slide-center" data-slide="6">
+      <div class="notice-box">
+        <span style="font-size: 2.2rem; margin-bottom: 0.75rem;">🧭</span>
+        <div class="badge-tag">GAIC Cohort Trajectory</div>
+        <h2>Upcoming: Localized Module Optimization</h2>
+        <p style="color: var(--muted); font-size: clamp(0.88rem, 1.7vw, 1.02rem); line-height: 1.6; max-width: 580px;">
+          The subsequent slides detail how WOGAFH’s technical team is systematically refining each module throughout the GAIC programme duration.
+          <br><br>
+          Our goal is to optimize every compartment for low-bandwidth mobile environments in Nigeria, ensuring high diagnostic precision and authentic spoken dialect fluency.
+        </p>
+      </div>
+    </section>
+
+    <!-- SLIDE 7: INDEPENDENT MODULE EVOLUTION -->
+    <section class="slide" data-slide="7">
+      <div class="badge-tag">Module Evolution 01</div>
+      <h2>Independent Module Evolution</h2>
+      <p class="lead">
+        Decoupling the STT, TTS, and Meditron clinical components enables isolated upgrades on distinct development lifecycles.
+      </p>
+
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-icon" style="color: var(--accent);">🧩</div>
+          <h3>Decoupled Lifecycle Mandate</h3>
+          <p>Separating the STT (Ear), TTS (Voice), and STG Database from the Meditron core ensures rapid prototyping without technical debt.</p>
+          
+          <div class="stack-visual">
+            <div class="stack-block"><span>Delivery Layer: Telethon (Telegram) & TTS</span> <strong style="color:var(--amber);">Isolated</strong></div>
+            <div class="stack-block"><span>Knowledge Layer: 2016/2022 STG Vector RAG</span> <strong style="color:var(--cyan);">Audited</strong></div>
+            <div class="stack-block"><span>Reasoning Layer: Meditron 7B Foundation</span> <strong style="color:var(--purple);">Core</strong></div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-icon" style="color: var(--cyan);">🚀</div>
+          <h3>Technical Enhancements</h3>
+          <ul>
+            <li>• <strong>Interface Contracts:</strong> Robust API schemas guarantee that swapping speech models never breaks Telegram parsing.</li>
+            <li>• <strong>Asynchronous A/B Testing:</strong> Benchmark Pidgin and Hausa language models against verified clinical test queries.</li>
+            <li>• <strong>Edge & Cloud Tiering:</strong> Meditron inference hosted on GPU endpoints, with lightweight Telethon webhooks on Render.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 8: STT DIALECT ADAPTABILITY -->
+    <section class="slide" data-slide="8">
+      <div class="badge-tag">Module Evolution 02</div>
+      <h2>Dialect & Accent Adaptability (STT Ear)</h2>
+      <p class="lead">
+        Fine-tuning speech recognition to decode Nigerian Pidgin and Hausa across rural clinics, varying speech speeds, and mixed vocabularies.
+      </p>
+
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-icon" style="color: var(--purple);">👂</div>
+          <h3>Pidgin & Hausa Acoustic Focus</h3>
+          <p>Enable women and traditional birth attendants to speak naturally in their primary dialect without modifying their accent.</p>
+          
+          <div class="waveform-box">
+            <div class="wave-bars">
+              <div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div>
+              <div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div>
+            </div>
+            <span style="font-size: 0.74rem; color: var(--muted); line-height: 1.3;">
+              Cleaning noisy clinic voice notes into structured text using Mozilla Common Voice & TWB datasets.
+            </span>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-icon" style="color: var(--accent);">⚙️</div>
+          <h3>Technical Enhancements</h3>
+          <ul>
+            <li>• <strong>Code-Switching Support:</strong> Accurately handles sentences mixing English clinical terms with Hausa or Pidgin idioms.</li>
+            <li>• <strong>Noise-Resilient Decoders:</strong> Fine-tuned with clinic background noise and low-cost smartphone microphone audio.</li>
+            <li>• <strong>Meta MMS & Whisper LoRA:</strong> Parameter-efficient fine-tuning on open-source African language corpora.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 9: TTS LOCALIZED SPEECH -->
+    <section class="slide" data-slide="9">
+      <div class="badge-tag">Module Evolution 03</div>
+      <h2>Localized Speech Enhancement (TTS Voice)</h2>
+      <p class="lead">
+        Synthesizing reassuring, natural spoken audio in Nigerian Pidgin and Hausa for non-literate community members.
+      </p>
+
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-icon" style="color: var(--amber);">🔊</div>
+          <h3>Culturally Empathetic Cadence</h3>
+          <p>Deliver sensitive reproductive health guidance with an unhurried, reassuring bedside manner that fosters patient trust.</p>
+          
+          <div class="pitch-wave-container">
+            <svg width="100%" height="36" viewBox="0 0 300 36">
+              <path class="pitch-svg-line" d="M 0 18 Q 40 4, 80 18 T 160 18 T 240 18 T 300 18" />
+            </svg>
+            <div style="display:flex; justify-content:space-between; font-size: 0.68rem; color: var(--muted); margin-top:0.2rem;">
+              <span>Robotic Synthetic Tone</span>
+              <span style="color: var(--accent);">Natural Dialect Intonation</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-icon" style="color: var(--pink);">🎙️</div>
+          <h3>Technical Enhancements</h3>
+          <ul>
+            <li>• <strong>Natural Pronunciation:</strong> Preserves authentic linguistic inflections and pacing in northern and southern dialects.</li>
+            <li>• <strong>Reproductive Health Tone:</strong> Avoids harsh, robotic cadences when communicating private wellness topics.</li>
+            <li>• <strong>Voice Note Caching:</strong> Pre-synthesizes high-frequency maternal wellness tips for instant Telegram voice playback.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 10: CLINICAL VERIFICATION -->
+    <section class="slide" data-slide="10">
+      <div class="badge-tag">Clinical Governance</div>
+      <h2>Rigorous Clinical Verification & Safety</h2>
+      <p class="lead">
+        Anchored in the Federal Ministry of Health's Standard Treatment Guidelines and verified by certified nurse-midwives.
+      </p>
+
+      <div class="grid-2">
+        <div class="card">
+          <div class="shield-badge-wrap">
+            <span>🛡️</span>
+            <span style="font-size: 0.76rem; font-weight: 700; color: #fff;">FMOH Verified · Zero Hallucinations</span>
+          </div>
+          <h3>Verified Clinical Sources</h3>
+          <p>Outputs are strictly constrained to Nigeria’s official National Standard Treatment Guidelines (2016 & 2022 editions).</p>
+          <ul>
+            <li>• <strong>Zero Speculation:</strong> The Meditron model must cite an indexed guideline chapter before answering.</li>
+            <li>• <strong>Reproductive Health Protocols:</strong> Covers maternal, pelvic, menstrual, and fertility care standards.</li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <div class="card-icon" style="color: var(--accent);">🩺</div>
+          <h3>WOGAFH Clinical Oversight</h3>
+          <ul>
+            <li>• <strong>Doctor & Midwife Review:</strong> WOGAFH’s clinical partners and nurse-midwives review model responses during piloting.</li>
+            <li>• <strong>Emergency Triage Escalation:</strong> High-risk symptoms (e.g., severe obstetric complications) trigger immediate referral to the nearest physical health facility.</li>
+            <li>• <strong>Language Audit:</strong> Native volunteer staff verify that translated advice preserves clinical intent accurately.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 11: ROADMAP & COMMUNITY IMPACT -->
+    <section class="slide" data-slide="11">
+      <div class="badge-tag">Definition of Done</div>
+      <h2>Pilot Roadmap & Community Impact</h2>
+      <p class="lead">
+        Executing our GAIC Cohort 2 milestone deliverables from prototype build to field deployment.
+      </p>
+
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-icon" style="color: var(--accent);">🗺️</div>
+          <h3>Cohort Execution Milestones</h3>
+          <ul>
+            <li>• <strong>Phase 1: Knowledge Ingestion:</strong> Chunk, index, and vectorize the 2016 and 2022 Nigerian STGs.</li>
+            <li>• <strong>Phase 2: Telegram Bot Prototype:</strong> Deploy Telethon + Meditron backend on Render supporting Pidgin and Hausa.</li>
+            <li>• <strong>Phase 3: Field Pilot:</strong> Test live with 30–50 Traditional Birth Attendants (TBAs) and Community Health Extension Workers.</li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <div class="card-icon" style="color: var(--cyan);">🌍</div>
+          <h3>Target Pilot Metrics</h3>
+          <div class="impact-metrics-row">
+            <div class="metric-card">
+              <div class="ripple-ring"></div>
+              <div class="metric-number" style="color: var(--accent);">30-50</div>
+              <div class="metric-label">TBAs & CHEWs Piloted</div>
+            </div>
+            <div class="metric-card">
+              <div class="ripple-ring" style="animation-delay: 1s;"></div>
+              <div class="metric-number" style="color: var(--purple);">2</div>
+              <div class="metric-label">Pilot Dialects (Pidgin/Hausa)</div>
+            </div>
+            <div class="metric-card">
+              <div class="ripple-ring" style="animation-delay: 2s;"></div>
+              <div class="metric-number" style="color: var(--cyan);">100%</div>
+              <div class="metric-label">STG Guideline Alignment</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 12: CENTRAL LLM DECISION REPORT (NEW FROM PDF) -->
+    <section class="slide" data-slide="12">
+      <div class="badge-tag">Module Evaluation · Empirical Benchmark</div>
+      <h2>Central LLM Selection: The Case for Gemini API</h2>
+      <p class="lead">
+        Why our engineering bench systematically evaluated Meditron-7B, Qwen-3B, and Nova Lite—and settled on Google Gemini API.
+      </p>
+
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-icon" style="color: var(--rose);">⚠️</div>
+          <h3>Why Alternative Models Fell Short</h3>
+          <ul>
+            <li>• <strong>Meditron-7B:</strong> 213.0s CPU latency (unusable for live chat), 14GB disk hog, dry English textbook tone.</li>
+            <li>• <strong>Qwen-2.5-3B:</strong> Suffered prompt-echoing in Hausa and pirate tone (<em>"Ahoy!"</em>) in Pidgin.</li>
+            <li>• <strong>Amazon Nova Lite:</strong> Fast (1.52s), but had the <em>ìṣèjọ́bà</em> ("government") hallucination in Yorùbá.</li>
+          </ul>
+        </div>
+
+        <div class="card highlight">
+          <div class="card-icon" style="color: var(--accent);">🏆</div>
+          <h3>Why Google Gemini API Won</h3>
+          <ul>
+            <li>• <strong>Accra AI Lab Heritage:</strong> Pre-trained on West African corpora; speaks natural Pidgin, Hausa, Yorùbá, and Igbo.</li>
+            <li>• <strong>1.20s Latency:</strong> Over 70× faster than local CPU models with 0 GB of disk consumption.</li>
+            <li>• <strong>1M+ Token Context:</strong> Ingests full chapters of the 2016/2022 Nigerian Treatment Guidelines directly.</li>
+          </ul>
+          <div class="matrix-card">
+            <div class="matrix-row"><span>Meditron Latency</span> <strong style="color:var(--rose);">213.0s</strong></div>
+            <div class="matrix-row"><span>Qwen-3B Latency</span> <strong style="color:var(--amber);">33.2s</strong></div>
+            <div class="matrix-row"><span>Gemini Flash Latency</span> <strong style="color:var(--accent);">1.20s ⚡ (Winner)</strong></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Universal Footer with VLX Tools Branding -->
+  <footer>
+    <button class="touch-btn" onclick="prevSlide()">← Back</button>
+    
+    <div class="vlx-center-brand">
+      <div class="vlx-title">MADE WITH VLX TOOLS</div>
+      <div class="vlx-tagline">The true home of tools · SmartHealth Community AI</div>
+    </div>
+
+    <button class="touch-btn primary" onclick="nextSlide()">Next →</button>
+  </footer>
+
+  <script>
+    const slides = document.querySelectorAll('.slide');
+    const progressFill = document.getElementById('progressFill');
+    const counterPill = document.getElementById('counterPill');
+    let currentIndex = 0;
+
+    function updateDeck() {
+      slides.forEach((slide, idx) => {
+        slide.classList.toggle('active', idx === currentIndex);
+      });
+      const total = slides.length;
+      progressFill.style.width = `${((currentIndex + 1) / total) * 100}%`;
+      counterPill.textContent = `${String(currentIndex + 1).padStart(2, '0')} / ${String(total).padStart(2, '0')}`;
+    }
+
+    function nextSlide() {
+      if (currentIndex < slides.length - 1) {
+        currentIndex++;
+        updateDeck();
+      }
+    }
+
+    function prevSlide() {
+      if (currentIndex > 0) {
+        currentIndex--;
+        updateDeck();
+      }
+    }
+
+    // Workflow Data for Slide 4
+    const workflowJourneys = [
+      {
+        title: "🎙️ Audio Input Journey (Speech-to-Text)",
+        desc: "When a community health worker or patient speaks a local dialect query into Telegram, the raw audio file hits the <strong>STT Model (Ear module)</strong>, transcribing the spoken audio into text data.",
+        activeNodes: ['node-user', 'node-stt', 'node-brain']
+      },
+      {
+        title: "⌨️ Text Input Journey (Direct Bypass)",
+        desc: "If the user types directly into Telegram, the input bypasses the STT module completely and feeds straight into the <strong>Meditron Central Model</strong> powered by Hugging Face <code>transformers</code>.",
+        activeNodes: ['node-user', 'node-brain']
+      },
+      {
+        title: "🔄 Reasoning and RAG Tool Interception",
+        desc: "The Meditron Central Model analyzes the query, determines external medical data requirements, and routes an explicit request to the <strong>2016/2022 Nigerian Standard Treatment Guidelines</strong> vector store.",
+        activeNodes: ['node-brain', 'node-tools']
+      },
+      {
+        title: "💬 Response Generation (Telegram Text)",
+        desc: "Once the central model formulates the clinical health response based strictly on guideline lookups, it formats the text and sends it directly back through the Telegram bot interface.",
+        activeNodes: ['node-brain', 'node-user']
+      },
+      {
+        title: "🔊 Audio Output Journey (Text-to-Speech)",
+        desc: "If voice output is requested, the verified response passes through the <strong>TTS Model</strong>, synthesizing natural spoken speech in Nigerian Pidgin or Hausa before sending the audio note back to the user.",
+        activeNodes: ['node-brain', 'node-tts', 'node-user']
+      }
+    ];
+
+    function activateJourney(index) {
+      document.querySelectorAll('.journey-tab').forEach((tab, i) => {
+        tab.classList.toggle('active', i === index);
+      });
+
+      const journey = workflowJourneys[index];
+      document.getElementById('journeyTitle').innerHTML = journey.title;
+      document.getElementById('journeyDesc').innerHTML = journey.desc;
+
+      const allNodes = ['node-user', 'node-stt', 'node-brain', 'node-tools', 'node-tts'];
+      allNodes.forEach(nodeId => {
+        const el = document.getElementById(nodeId);
+        el.classList.remove('lit-active', 'lit-brain', 'dimmed');
+        if (journey.activeNodes.includes(nodeId)) {
+          if (nodeId === 'node-brain') {
+            el.classList.add('lit-brain');
+          } else {
+            el.classList.add('lit-active');
+          }
+        } else {
+          el.classList.add('dimmed');
+        }
+      });
+    }
+
+    // Touch Swipe Detection
+    let startX = 0;
+    let startY = 0;
+    const container = document.getElementById('deckContainer');
+
+    container.addEventListener('touchstart', (e) => {
+      startX = e.touches[0].clientX;
+      startY = e.touches[0].clientY;
+    }, { passive: true });
+
+    container.addEventListener('touchend', (e) => {
+      const diffX = startX - e.changedTouches[0].clientX;
+      const diffY = startY - e.changedTouches[0].clientY;
+      
+      if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 42) {
+        if (diffX > 0) nextSlide();
+        else prevSlide();
+      }
+    }, { passive: true });
+
+    // Keyboard Navigation
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' || e.key === ' ') nextSlide();
+      if (e.key === 'ArrowLeft' || e.key === 'PageUp') prevSlide();
+    });
+
+    // Fullscreen Toggle
+    function toggleFullscreen() {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen().catch(() => {});
+      } else {
+        document.exitFullscreen().catch(() => {});
+      }
+    }
+
+    // Initialize Slide 4
+    activateJourney(0);
+    updateDeck();
+  </script>
+</body>
+</html>
