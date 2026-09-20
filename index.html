@@ -79,7 +79,7 @@
 
     .progress-fill {
       height: 100%;
-      width: 8.33%;
+      width: 7.69%;
       background: linear-gradient(90deg, var(--accent), var(--purple), var(--pink));
       transition: width 0.35s ease;
     }
@@ -710,6 +710,220 @@
     }
     .matrix-row:last-child { border-bottom: none; }
 
+    /* Slide 13: Minimalistic Scenario Cards & Modal Overlay */
+    .scenario-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+      gap: 0.65rem;
+      width: 100%;
+      margin-top: 0.65rem;
+    }
+
+    .scenario-pill {
+      background: rgba(18, 24, 38, 0.95);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 0.75rem 0.85rem;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 0.4rem;
+      transition: all 0.22s ease;
+      touch-action: manipulation;
+    }
+
+    .scenario-pill:hover, .scenario-pill:active {
+      border-color: var(--accent);
+      background: rgba(16, 185, 129, 0.12);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 14px var(--accent-glow);
+    }
+
+    .pill-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .pill-num {
+      font-size: 0.68rem;
+      font-weight: 800;
+      color: var(--accent);
+      background: rgba(16, 185, 129, 0.15);
+      padding: 0.15rem 0.4rem;
+      border-radius: 5px;
+      font-family: 'Space Grotesk', monospace;
+    }
+
+    .pill-title {
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: #fff;
+      line-height: 1.25;
+    }
+
+    .pill-action {
+      font-size: 0.72rem;
+      color: var(--cyan);
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+
+    /* Modal Overlay */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(4, 7, 14, 0.85);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      z-index: 200;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: clamp(0.75rem, 3vw, 1.5rem);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s ease;
+    }
+
+    .modal-overlay.open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .modal-card {
+      background: rgba(15, 21, 36, 0.98);
+      border: 1px solid var(--card-border);
+      border-radius: 18px;
+      width: 100%;
+      max-width: 920px;
+      max-height: 88vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.7), 0 0 30px rgba(16, 185, 129, 0.2);
+      transform: translateY(16px) scale(0.98);
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .modal-overlay.open .modal-card {
+      transform: translateY(0) scale(1);
+    }
+
+    .modal-header {
+      padding: 0.9rem 1.2rem;
+      border-bottom: 1px solid var(--card-border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(255, 255, 255, 0.03);
+    }
+
+    .modal-header h3 {
+      font-size: clamp(0.95rem, 2vw, 1.15rem);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .modal-close-btn {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid var(--card-border);
+      color: #fff;
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      font-size: 1.1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      touch-action: manipulation;
+    }
+
+    .modal-close-btn:hover { background: rgba(244, 63, 94, 0.2); border-color: var(--rose); }
+
+    .modal-body {
+      padding: clamp(0.9rem, 2vw, 1.25rem);
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 0.85rem;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(255,255,255,0.15) transparent;
+    }
+
+    .modal-query-box {
+      background: rgba(56, 189, 248, 0.08);
+      border: 1px solid rgba(56, 189, 248, 0.25);
+      border-radius: 12px;
+      padding: 0.85rem 1rem;
+    }
+
+    .modal-query-box strong {
+      color: var(--cyan);
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      display: block;
+      margin-bottom: 0.25rem;
+    }
+
+    .modal-query-box p {
+      font-size: clamp(0.85rem, 1.5vw, 0.95rem);
+      color: #fff;
+      line-height: 1.45;
+      font-style: italic;
+    }
+
+    .modal-models-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 0.85rem;
+    }
+
+    .model-resp-card {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 0.85rem 1rem;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .model-resp-card.meditron {
+      border-top: 3px solid var(--purple);
+    }
+
+    .model-resp-card.qwen {
+      border-top: 3px solid var(--accent);
+    }
+
+    .model-tag {
+      font-size: 0.72rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 0.45rem;
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+
+    .model-resp-card.meditron .model-tag { color: var(--purple); }
+    .model-resp-card.qwen .model-tag { color: var(--accent); }
+
+    .model-resp-text {
+      font-size: clamp(0.78rem, 1.3vw, 0.85rem);
+      color: var(--muted);
+      line-height: 1.55;
+      white-space: pre-line;
+    }
+
     /* Universal Footer with VLX Tools Branding */
     footer {
       position: fixed;
@@ -795,7 +1009,7 @@
       <span class="brand-badge">WOGAFH × GAIC</span>
     </div>
     <div class="header-actions">
-      <div class="counter-pill" id="counterPill">01 / 12</div>
+      <div class="counter-pill" id="counterPill">01 / 13</div>
       <button class="icon-btn" onclick="toggleFullscreen()" title="Toggle Fullscreen">⛶</button>
     </div>
   </header>
@@ -1224,7 +1438,7 @@
       </div>
     </section>
 
-    <!-- SLIDE 12: CENTRAL LLM DECISION REPORT (NEW FROM PDF) -->
+    <!-- SLIDE 12: CENTRAL LLM DECISION REPORT -->
     <section class="slide" data-slide="12">
       <div class="badge-tag">Module Evaluation · Empirical Benchmark</div>
       <h2>Central LLM Selection: The Case for Gemini API</h2>
@@ -1260,7 +1474,48 @@
       </div>
     </section>
 
+    <!-- SLIDE 13: RAW MODEL OUTPUTS BENCHMARK (NEW MINIMALIST OVERLAY) -->
+    <section class="slide" data-slide="13">
+      <div class="badge-tag">Clinical AI Benchmark · 13 Scenarios</div>
+      <h2>Empirical Model Responses & Benchmarks</h2>
+      <p class="lead">
+        Direct side-by-side responses for 13 female reproductive and maternal health scenarios. Click any card to view the exact query and model responses.
+      </p>
+
+      <div class="scenario-grid" id="scenarioGridContainer">
+        <!-- Rendered via JS -->
+      </div>
+    </section>
+
   </main>
+
+  <!-- Interactive Scenario Modal Overlay -->
+  <div class="modal-overlay" id="scenarioModal" onclick="handleModalBackdropClick(event)">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 id="modalTitle"><span>🩺</span> Scenario Details</h3>
+        <button class="modal-close-btn" onclick="closeScenarioModal()">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="modal-query-box">
+          <strong>Patient Query:</strong>
+          <p id="modalQueryText">Query text goes here...</p>
+        </div>
+        <div class="modal-models-grid">
+          <!-- Meditron Card -->
+          <div class="model-resp-card meditron">
+            <div class="model-tag">🧠 Meditron-7B (4-Bit Local)</div>
+            <div class="model-resp-text" id="modalMeditronText">Meditron response text...</div>
+          </div>
+          <!-- Qwen Card -->
+          <div class="model-resp-card qwen">
+            <div class="model-tag">⚡ Qwen (Frontier Model)</div>
+            <div class="model-resp-text" id="modalQwenText">Qwen response text...</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <!-- Universal Footer with VLX Tools Branding -->
   <footer>
@@ -1357,6 +1612,276 @@
       });
     }
 
+    // 13 Clinical Scenarios Benchmark Data
+    const benchmarkScenarios = [
+      {
+        id: 1,
+        title: "Suspected Ectopic Pregnancy",
+        query: "I missed my period 3 weeks ago and my home pregnancy test is positive. Since yesterday, I have had sharp pain localized to the right side of my lower abdomen, accompanied by light brownish vaginal spotting. Can I take Paracetamol and antispasmodics for the pain?",
+        meditron: `The patient has amenorrhea (absence or infrequent menstruation) which could be due to pregnancy, stress, dieting, medications, hormonal imbalance, hypothyroidism, hyperprolactinemia, polycystic ovarian syndrome, etc. She also has dysmenorrhea (pain with menses), which can occur in all women during their childbearing years but may indicate underlying pathology such as endometriosis, adenomyosis, fibromatosis, uterine leiomyoma, pelvic inflammatory disease, etc. The presence of these symptoms should prompt further investigation into possible causes.
+
+A negative urinary human chorionic gonadotropin (hCG) result rules out early pregnancy; however, it does not rule out ectopic pregnancy. A transabdominal ultrasound scan would provide more information about the location of any intrauterine gestational sacs and confirm whether there was any free fluid within the peritoneal cavity suggestive of hemoperitoneum from ruptured tubes or ovary. If this were found, then emergency surgery would need to be performed immediately.
+
+If she has no other risk factors, her low level of serum progesterone suggests that she is still in the follicular phase of her cycle rather than being postovulatory. This means that she will likely experience withdrawal bleeding soon. However, if she experiences prolonged heavy bleeding without relief after taking analgesia, then she needs to seek medical attention immediately.`,
+        qwen: `- **Triage Level:** Critical Emergency
+- **Danger Signs / Red Flags:** Positive pregnancy test + unilateral lower abdominal pain + brownish spotting → high suspicion for ectopic pregnancy, which can lead to tubal rupture, hemorrhage, and death if untreated.
+- **Harmful Practices / Myths Addressed:** Self-medication with paracetamol and antispasmodics may mask worsening symptoms. Pain relief should not delay diagnosis; self-treatment is dangerous in this context.
+- **Clinical Assessment & Action Plan:**
+  • Immediate referral to emergency obstetric care unit.
+  • Perform quantitative β-hCG and transvaginal ultrasound to confirm ectopic pregnancy.
+  • Avoid NSAIDs or antispasmodics that may delay care. Do not discharge home.
+  • If hemodynamically unstable, treat as surgical emergency (possible ruptured ectopic).`
+      },
+      {
+        id: 2,
+        title: "Secondary Postpartum Hemorrhage & Shock",
+        query: "I delivered a baby boy at home 9 days ago. Today, my bleeding suddenly became very heavy with large blood clots, and I feel dizzy and lightheaded whenever I stand up. My family suggested drinking hot ginger tea. What should I do?",
+        meditron: `Thank you for your question! You have had postpartum hemorrhage (PPH). PPH is defined as vaginal or cervical bleeding that occurs within 24 hours of delivery and exceeds 500 mL in volume. It can be life threatening because it may lead to shock from hypovolemia and acute blood loss anemia. The most common causes include uterine atony, retained placenta, lacerations, trauma during childbirth, coagulopathy, and genital tract injury. In this case, we suspect that the patient’s bleeding was caused by retained products of conception (RPOC) due to her history of home birth without skilled attendance. RPOC is one of the leading causes of maternal mortality worldwide; however, it remains underdiagnosed and undertreated.
+
+Treatments include manual removal of the placental remnants, administration of oxytocics, and surgery. If she has no contraindication to transfusion, then consider giving her a unit of packed red blood cells. She also needs close monitoring until her condition stabilizes.
+
+#### Key Points:
+Postpartum hemorrhage is the leading cause of death among women globally. Retained products of conception is one of the main causes of postpartum hemorrhage. Transfusion is indicated when there is significant ongoing bleeding despite other treatments.
+
+The authors report their experience concerning 36 cases of primary hyperparathyroidism treated between January 1st...`,
+        qwen: `- **Triage Level:** Critical Emergency
+- **Danger Signs / Red Flags:** Sudden increase in postpartum bleeding at day 9 (secondary postpartum hemorrhage), passage of clots, dizziness/lightheadedness on standing (signs of hypovolemia) → risk of shock and death.
+- **Harmful Practices / Myths Addressed:** Ginger tea is not a treatment for hemorrhage. Delaying care with home remedies can be fatal.
+- **Clinical Assessment & Action Plan:**
+  • Treat as life-threatening emergency due to possible retained products of conception or infection (endometritis).
+  • Immediate referral to hospital with obstetric capabilities.
+  • Assess vital signs (BP, pulse, capillary refill), check for pallor, uterine tenderness/enlargement.
+  • Administer IV fluids if hypotensive; prepare for blood transfusion and ultrasound evaluation.
+  • Avoid oral remedies—priority is urgent medical evaluation and potential evacuation of uterus.`
+      },
+      {
+        id: 3,
+        title: "Severe Pre-Eclampsia / Impending Eclampsia",
+        query: "I am 32 weeks pregnant. For the past two days, my face and feet have become severely swollen. I also have a persistent, throbbing headache that does not go away, along with flashes of light and blurry vision. What painkiller is safe for this headache?",
+        meditron: `The patient should be advised to seek emergency care immediately as she may need urgent intervention or hospitalization due to her symptoms. She can take acetaminophen (Tylenol) up to four times per day but only after consultation with her doctor. The use of ibuprofen (Advil), naproxen sodium (Aleve), aspirin, and other nonsteroidal antiinflammatory drugs (NSAIDs) during pregnancy has been associated with increased risk of miscarriage, premature delivery, low birth weight, and congenital heart defects in newborns. These medications should therefore be avoided unless prescribed by a physician.
+
+Additionally, it is important to note that some over-the-counter cold and flu remedies contain NSAIDs such as dextromethorphan, which could potentially cause complications for the mother and fetus. Therefore, these products must be used cautiously and under medical supervision. In summary, patients who experience severe headaches during pregnancy should avoid taking any type of NSAID without first seeking professional guidance from their obstetricians or midwives.`,
+        qwen: `- **Triage Level:** Critical Emergency
+- **Danger Signs / Red Flags:** Headache, blurred vision, photopsia (flashes of light), facial/leg edema at 32 weeks → classic signs of pre-eclampsia with impending eclampsia. Risk of seizures, stroke, placental abruption, maternal/fetal death.
+- **Harmful Practices / Myths Addressed:** Self-administered painkillers (even acetaminophen) do not address underlying pathology and may delay care. Pain relief alone is insufficient and dangerous.
+- **Clinical Assessment & Action Plan:**
+  • Immediate referral to hospital for evaluation and possible admission.
+  • Measure blood pressure (if ≥140/90 mmHg with symptoms, consistent with severe pre-eclampsia).
+  • Check urine protein (dipstick or PCR) and conduct LFTs, platelets, creatinine.
+  • Magnesium sulfate may be needed to prevent seizures.
+  • Delivery may be required depending on severity and gestational age.`
+      },
+      {
+        id: 4,
+        title: "Premature Rupture of Membranes (PROM)",
+        query: "I am 7 months pregnant (30 weeks). Clear, watery fluid without any pain has been trickling down my legs since early this morning, soaking through my clothing. Did my water break, or is this just heavy normal pregnancy discharge?",
+        meditron: `The patient's symptoms of vaginal leakage with no associated abdominal cramping suggest that she may have had a premature rupture of membranes (PROM) rather than urinary incontinence. The presence of clear fluid suggests intact membrane integrity; however, it could also be blood from a small amount of bleeding into her cervix. She should not attempt to clean up the fluid herself but instead seek medical care immediately as PROM can lead to serious complications for both mother and baby.
+
+If she does not go to the hospital right away, you recommend that she take acetaminophen for fever relief and continue to monitor her temperature at home until she arrives at the emergency department. You advise her against using over-the-counter medications such as ibuprofen because they increase risk of miscarriage.`,
+        qwen: `- **Triage Level:** Urgent Referral
+- **Danger Signs / Red Flags:** Painless, continuous leakage of clear fluid at 30 weeks → likely preterm prelabor rupture of membranes (PPROM) → risk of chorioamnionitis, preterm birth, umbilical cord prolapse.
+- **Harmful Practices / Myths Addressed:** Belief that "normal discharge" explains soaking clothes is incorrect—vaginal discharge does not continuously soak clothing like amniotic fluid.
+- **Clinical Assessment & Action Plan:**
+  • Avoid digital vaginal exams to reduce infection risk.
+  • Perform speculum exam (not bimanual) to visualize pooling in posterior fornix; check for ferning or pH testing (nitrazine test).
+  • Immediate referral to maternity unit for assessment, antibiotics (e.g., erythromycin), corticosteroids for fetal lung maturity, and monitoring.
+  • No home management—requires hospital observation.`
+      },
+      {
+        id: 5,
+        title: "Antepartum Hemorrhage (Placenta Previa)",
+        query: "I am 8 months pregnant. I woke up this morning to bright red vaginal bleeding, but I do not have any abdominal pain or labor contractions. Should I wait until labor pains start before going to the clinic?",
+        meditron: `The patient is in her eighth month of gestation with no history of previous miscarriages or stillbirths. She has been experiencing intermittent spotting for several weeks now, which she attributes to being pregnant. The patient does not report any other symptoms such as nausea, vomiting, fever, chills, diarrhea, constipation, headache, dizziness, shortness of breath, coughing, sore throat, rashes on skin, itching, swelling of hands or feet, numbness, tingling sensations, muscle weakness, difficulty walking, loss of appetite, weight loss, night sweats, urinary problems, or sexual activity changes.
+
+Her last menstrual period was approximately four months ago; however, she did not keep track of her cycle regularly since then due to stress from work and school. She denies taking any medicines except prenatal vitamins prescribed by her doctor during each trimester. She reports that she had one episode of mild vaginal bleeding when she was three months into her pregnancy but nothing else since then. This time around, she noticed some blood mixed with watery fluid coming out after having sex two days prior to presentation at our office today.`,
+        qwen: `- **Triage Level:** Urgent Referral
+- **Danger Signs / Red Flags:** Painless bright red vaginal bleeding at 34–36 weeks → high possibility of placenta previa or vasa previa—both are life-threatening if undiagnosed pre-delivery.
+- **Harmful Practices / Myths Addressed:** Waiting for labor to begin before seeking care risks massive hemorrhage during contractions or delivery. This is not safe.
+- **Clinical Assessment & Action Plan:**
+  • Do not perform vaginal exam (risk of provoking hemorrhage in placenta previa).
+  • Immediate referral to hospital for ultrasound to determine placental location.
+  • Monitor maternal hemodynamics and fetal status.
+  • Prepare for possible cesarean delivery.`
+      },
+      {
+        id: 6,
+        title: "Emergency Contraception Misconceptions",
+        query: "I had unprotected sex two days ago. A friend suggested drinking dry gin mixed with salt, or taking high doses of Ampicillin/Cloxacillin capsules to prevent pregnancy. Will this prevent pregnancy?",
+        meditron: `The patient is at risk for unwanted pregnancies because she engaged in unprotected sexual intercourse within the last 72 hours (the fertile window). She has no contraindications to pregnancy; therefore, it would be best to advise her that she should take emergency contraception as soon as possible.
+
+The most effective method of emergency contraceptives is levonorgestrel which can be taken up to three days after having unprotected sex. It works by delaying ovulation so there will not be enough time for sperm to reach the egg. If taken within 12 hours of unprotected sex, the effectiveness decreases but still prevents about half of all pregnancies. However, since the patient did not have any symptoms of STIs such as vaginal discharge or abdominal pain, we do not need to worry too much about these conditions.
+
+Therefore, I recommend giving her information on how to use emergency contraception safely without causing side effects from alcohol consumption or drug interactions between antibiotics and hormonal birth control pills.`,
+        qwen: `- **Triage Level:** Outpatient Care
+- **Danger Signs / Red Flags:** None acutely, but lack of knowledge about emergency contraception puts patient at risk of unintended pregnancy.
+- **Harmful Practices / Myths Addressed:**
+  • Drinking gin with salt is toxic, ineffective, and potentially harmful (can cause dehydration, electrolyte imbalance, liver damage).
+  • Ampicillin/cloxacillin are antibiotics; they do not prevent pregnancy and misuse promotes antimicrobial resistance.
+- **Clinical Assessment & Action Plan:**
+  • Counsel that only emergency contraception (EC) prevents pregnancy after unprotected sex.
+  • Options: Levonorgestrel EC pill (LNG-EC) within 72 hours (best if <24h), Ulipristal acetate (UPA-EC) within 120 hours, or Copper IUD insertion within 5 days (most effective).
+  • Refer to clinic/pharmacy for access. Counsel on regular contraception methods going forward.`
+      },
+      {
+        id: 7,
+        title: "Injectable Contraceptive (Depo) Amenorrhea",
+        query: "I received the 3-month contraceptive injection (Depo-Provera) 5 months ago, and my menstrual period has stopped completely. People tell me the blood is accumulating inside my abdomen and will cause fibroids. What medication can I take to induce my period?",
+        meditron: `The patient should be advised that she does not have any medical condition requiring treatment at this time. She may experience some spotting or light bleeding in the first few weeks after receiving her Depo shot; however, it is normal for these symptoms to resolve within several days without intervention. If she experiences heavy bleeding lasting longer than one week, then she needs to seek care immediately as there could be underlying causes such as uterine fibroids, endometrial polyps, or other pathology.
+
+The most common side effect of injectable hormonal birth control is amenorrhea (absence of menses), which occurs due to suppression of ovarian function by progestin. This usually resolves spontaneously over time but can persist up to six months post-injection depending on individual factors like age and weight.
+
+#### References:
+AIM OF THE STUDY: To evaluate the results obtained from patients who underwent surgery for primary hyperparathyroidism between January 1980 and December 2004.`,
+        qwen: `- **Triage Level:** Health Education
+- **Danger Signs / Red Flags:** None—amenorrhea after Depo-Provera is common, benign, and expected. No evidence of internal blood accumulation.
+- **Harmful Practices / Myths Addressed:** Myth that “blood accumulates in the abdomen” and causes fibroids is false. This misconception leads to unnecessary anxiety and potentially harmful interventions.
+- **Clinical Assessment & Action Plan:**
+  • Reassure: suppression of menses is normal on progestin-only contraception like Depo-Provera.
+  • No medication needed to “induce” period—it will return spontaneously after injections stop.
+  • Educate: absence of bleeding ≠ disease; fibroids are hormonally driven but not caused by retained blood.
+  • Offer alternative contraceptives if menstrual changes are distressing.`
+      },
+      {
+        id: 8,
+        title: "Infertility Triage & Herbal Cleansers",
+        query: "My husband and I have been trying to conceive for 18 months without success. My relatives claim it is entirely my fault because I had painful periods in my youth. Which herbal uterine cleansers should I take to prepare my womb for pregnancy?",
+        meditron: `The patient’s history of dysmenorrhea (painful menstruation) suggests that she has endometriosis or adenomyosis. These conditions can be associated with infertility due to chronic pelvic inflammation and scarring from repeated tissue injury. The use of herbal medicines as “uterine cleaning” agents may cause further damage by inducing vasoconstriction and increasing oxidative stress within the endometrium. There is no scientific basis for these claims. Herbal remedies also carry risks such as hepatotoxicity and drug interactions.
+
+#### Clinical Considerations:
+Endometriosis is defined histologically by the presence of ectopic endometrial glands and stromal cells outside the uterus. It affects approximately 6%–10% of women worldwide and causes significant morbidity through its effects on fertility, quality of life, and work productivity. Endometriotic lesions occur most commonly in the ovaries, fallopian tubes, peritoneum, and rectovaginal septum...`,
+        qwen: `- **Triage Level:** Outpatient Care
+- **Danger Signs / Red Flags:** Infertility after 18 months of trying → requires investigation of both partners. Delayed evaluation reduces chances of conception.
+- **Harmful Practices / Myths Addressed:** Blaming female partner solely for infertility is unfounded; male factor contributes ~40–50%. “Herbal uterine cleansers” have no scientific basis and may be harmful or delay proper care.
+- **Clinical Assessment & Action Plan:**
+  • Refer couple for joint fertility assessment: Semen analysis for male partner, Ovulation assessment, HSG (hysterosalpingography) to assess tubal patency.
+  • Address any history of PID, endometriosis, or dysmenorrhea that may suggest underlying pathology.
+  • Avoid unregulated herbal products; some may interfere with hormones or liver function.`
+      },
+      {
+        id: 9,
+        title: "Pelvic Inflammatory Disease (PID)",
+        query: "For the past three weeks, I have had foul-smelling yellow vaginal discharge, severe lower abdominal pain, deep pain during sexual intercourse, and a low-grade fever. Can I buy a single course of Ciprofloxacin over the counter to cure this?",
+        meditron: `The patient is experiencing symptoms consistent with pelvic inflammatory disease (PID). PID can be caused by sexually transmitted infections such as gonorrhea or chlamydia; however, it may also occur due to other causes including intrauterine device use, pregnancy, and endometriosis. The most common cause of acute PID is Neisseria Gonorrhoeae (GC), which accounts for approximately half of all cases. Other bacterial pathogens that commonly cause PID include Chlamydia trachomatis (CT) and Mycoplasma genitalium (MG).
+
+In addition to antibiotics targeting GC, CT, MG, and other potential etiologies should be considered when treating patients who present with PID symptoms. It is important to note that some individuals do not experience any noticeable symptoms despite having active infection; therefore, screening tests must always accompany treatment regimens regardless of whether they were prescribed based on clinical presentation alone or after laboratory confirmation was obtained...`,
+        qwen: `- **Triage Level:** Urgent Referral
+- **Danger Signs / Red Flags:** Foul-smelling discharge, lower abdominal pain, dyspareunia, fever → pelvic inflammatory disease (PID) → risk of tubo-ovarian abscess, ectopic pregnancy, chronic pelvic pain, infertility.
+- **Harmful Practices / Myths Addressed:** Self-treating with over-the-counter ciprofloxacin is dangerous—suboptimal dosing, poor coverage (not first-line for PID), and promotes resistance.
+- **Clinical Assessment & Action Plan:**
+  • Immediate referral for evaluation and treatment based on CDC criteria.
+  • Treat empirically with dual therapy: IM ceftriaxone + oral doxycycline ± metronidazole.
+  • Hospitalize if severe illness, pregnancy, or inability to follow up.
+  • Test for gonorrhea/chlamydia and HIV/Hepatitis B/C.`
+      },
+      {
+        id: 10,
+        title: "Recurrent Candidiasis vs. Antiseptic Douching",
+        query: "I have thick, white, curd-like vaginal discharge with intense itching. I have been washing inside my vagina twice daily with antiseptic liquid diluted in warm water and scented feminine soaps, but the itching is worsening. What should I do?",
+        meditron: `The patient’s symptoms suggest bacterial vaginosis (BV). BV is characterized by abnormal vaginal flora dominated by lactobacilli depletion or replacement with other microorganisms such as Gardnerella spp., Prevotella spp., Mobiluncus mulieris, Atopobium vaginae, Mycoplasma hominis, Ureaplasma urealyticum, Streptococcus agalactiae, Staphylococcus epidermidis, Enterococci faecalis, Clostridia species, Fusobacteria, Peptostreptococcaceae, Veillonella parvula, and Lactobacillus crispatus.
+
+The most common cause of this condition is dysbiosis secondary to sexual activity, hormonal changes during pregnancy, menstruation, use of intravaginal products, and poor personal hygiene. Other causes include diabetes mellitus, immunosuppression from HIV, chemotherapy, radiation therapy, smoking, and genetic factors. Treatment for BV consists of metronidazole 750mg po bid x 7 days...`,
+        qwen: `- **Triage Level:** Outpatient Care
+- **Danger Signs / Red Flags:** None life-threatening, but worsening symptoms due to harmful hygiene practices.
+- **Harmful Practices / Myths Addressed:** Vaginal douching with antiseptic liquids or scented soaps disrupts normal vaginal flora, damages mucosa, and increases risk of yeast overgrowth, bacterial vaginosis, and irritation. Misguided belief in “cleansing” harms more than helps.
+- **Clinical Assessment & Action Plan:**
+  • Likely vulvovaginal candidiasis (thick, curdy discharge, intense itching).
+  • Avoid vaginal washing—clean external genitalia only with water or mild unscented soap.
+  • Treat with topical or oral antifungals (e.g., clotrimazole, miconazole, fluconazole 150mg single dose).
+  • Counsel on wearing cotton underwear, avoiding tight clothing, and not using feminine hygiene products.`
+      },
+      {
+        id: 11,
+        title: "Post-Coital Bleeding & Cervical Screening",
+        query: "I am 43 years old. For the past two months, whenever my husband and I have sexual relations, I notice light bleeding and fresh blood stains on the bedding. I feel no pain. Is this just friction, or should I be concerned?",
+        meditron: `Thank you for your question! You do not need to worry about these symptoms as they are normal in pregnancy. The vaginal discharge is called leukorrhea (white discharge) which occurs during all stages of life including puberty, menstrual cycle, pregnancy, postpartum period, breastfeeding, and perimenopause. It can also occur with some medications such as antibiotics and birth control pills.
+
+Leukorrhea is usually white, thin, watery, odourless, and does not contain red blood cells. If there is excessive amount of leucorrhoeic fluid, then it could indicate underlying conditions like bacterial vaginosis, trichomoniasis, chlamydia, gonorrhea, candidiasis, herpes simplex virus, human papillomavirus, etc., so please see your doctor immediately.
+
+In addition, when having sex, try using condoms made out of latex rather than plastic since the latter has been shown to increase the likelihood of developing yeast infection.`,
+        qwen: `- **Triage Level:** Urgent Referral
+- **Danger Signs / Red Flags:** Postmenopausal bleeding (even light) at age 43 (assuming menopause already occurred)—endometrial cancer must be ruled out. Coital bleeding also raises concern for cervical cancer or atrophic vaginitis.
+- **Harmful Practices / Myths Addressed:** Attributing bleeding solely to “friction” ignores serious underlying pathology. Early detection saves lives.
+- **Clinical Assessment & Action Plan:**
+  • Immediate referral for pelvic exam, cervical screening (Pap smear), and transvaginal ultrasound (to assess endometrial thickness).
+  • If endometrial stripe >4–5mm (postmenopausal), refer for endometrial biopsy.
+  • Rule out cervical polyps, infection, or malignancy.
+  • Atrophic vaginitis is possible but must be diagnosed after excluding cancer.`
+      },
+      {
+        id: 12,
+        title: "Severe Secondary Dysmenorrhea / Endometriosis",
+        query: "I am 21 years old. Every month, my menstrual cramps are so debilitating that I vomit, experience severe shaking, and miss work/classes for three days. I was told that this pain is normal for all women and will only resolve after childbirth. Is there any way to evaluate if something is wrong?",
+        meditron: `Thank you for your question! The answer depends on how long these symptoms have been occurring. If they started within one year of having sex or since birth (if not yet had sexual intercourse), then it would be appropriate to consider pregnancy as a possibility. However, if they began before becoming sexually active, then other causes should be considered first.
+
+For example, endometriosis can cause similar symptoms but does not require treatment until later in life when fertility becomes compromised due to scarring from surgery or hormonal therapy used during infertility treatments such as IVF procedures where eggs were retrieved from ovaries instead of using donor sperm like most cases involving male factor infertility do today because technology has advanced significantly over time making them less common than previously thought based upon historical data collected prior to modern medicine being available widely enough throughout society at large including rural areas where accessibility issues still exist despite improvements made through government funded programs designed specifically around helping those living far away from urban centers get proper medical care without having travel costs become prohibitive given their limited financial resources often times resulting in poverty which leads back full circle again into another cycle perpetuated by lack of education about what constitutes good nutrition versus poor diet choices leading people down paths towards obesity causing chronic diseases like type II diabetes mellitus ultimately affecting every organ system eventually leading upwards toward premature death unless steps taken early enough prevent complications from developing further along downstream pathways leading off course into irreversible damage done permanently altering genetic material passed onto future generations who may never know what happened exactly why things turned out this way.`,
+        qwen: `- **Triage Level:** Outpatient Care
+- **Danger Signs / Red Flags:** Debilitating dysmenorrhea with vomiting and work/school absence → suggestive of secondary dysmenorrhea, possibly due to endometriosis, adenomyosis, or other pathology.
+- **Harmful Practices / Myths Addressed:** Myth that severe pain is “normal for all women” and resolves only after childbirth leads to diagnostic delay (endometriosis avg. dx delay = 7–10 years).
+- **Clinical Assessment & Action Plan:**
+  • Refer for detailed gynecologic evaluation.
+  • Consider ultrasound to assess for structural causes (e.g., adenomyosis, fibroids).
+  • Trial of NSAIDs (e.g., mefenamic acid) and hormonal contraception (combined oral pills, LNG-IUD) for symptom control.
+  • If no improvement, refer for laparoscopic evaluation if endometriosis suspected. Early diagnosis improves long-term fertility and quality of life.`
+      },
+      {
+        id: 13,
+        title: "Postmenopausal Bleeding (Endometrial Pathology)",
+        query: "I am 56 years old, and my periods ceased completely 4 years ago. Last week, I unexpectedly experienced fresh vaginal bleeding resembling a regular menstrual cycle for 4 days. My acquaintances suggested my fertility is returning. Is this normal?",
+        meditron: `The patient’s symptoms of irregular menses may be due to perimenopause or early postmenopausal status. Perimenopause refers to the period before menopause when ovarian function declines but ovulation continues; it can last from several months up to 10 years. The average age at which women reach natural menopause in the United States is 51.3 years, with most women experiencing their final menstruation by age 55.
+
+Menopause marks the end of reproduction and is characterized by amenorrhea and cessation of follicular development. It occurs as a result of depletion of ovarian follicles that produce estrogen and progesterone hormones. Estrogens play important roles in regulating bone metabolism, cardiovascular system homeostasis, lipid profile, glucose tolerance, and sexuality.
+
+Menopause typically begins with vasomotor symptoms such as hot flashes and night sweats followed by changes in sleep patterns, decreased libido, and fatigue. These symptoms often resolve within 1 year without treatment. However, some women experience more severe symptoms including anxiety, irritability, insomnia, cognitive impairments, joint pain...`,
+        qwen: `- **Triage Level:** Critical Emergency
+- **Danger Signs / Red Flags:** Postmenopausal bleeding 4 years after menopause → endometrial cancer until proven otherwise. Risk increases with age.
+- **Harmful Practices / Myths Addressed:** Belief that bleeding means “fertility returning” is dangerous myth; postmenopausal bleeding is never normal and is not a sign of rejuvenation.
+- **Clinical Assessment & Action Plan:**
+  • Immediate referral to gynecology for transvaginal ultrasound to assess endometrial thickness.
+  • Endometrial biopsy is diagnostic gold standard.
+  • Rule out hyperplasia, polyps, or carcinoma.
+  • Do not reassure or delay—if undiagnosed, can progress to advanced cancer.`
+      }
+    ];
+
+    // Render Scenario Grid for Slide 13
+    const scenarioContainer = document.getElementById('scenarioGridContainer');
+    benchmarkScenarios.forEach(sc => {
+      const pill = document.createElement('div');
+      pill.className = 'scenario-pill';
+      pill.onclick = () => openScenarioModal(sc.id);
+      pill.innerHTML = `
+        <div class="pill-header">
+          <span class="pill-num">SCENARIO ${sc.id < 10 ? '0' + sc.id : sc.id}</span>
+        </div>
+        <div class="pill-title">${sc.title}</div>
+        <div class="pill-action">🔍 Inspect Responses →</div>
+      `;
+      scenarioContainer.appendChild(pill);
+    });
+
+    // Modal Interaction Functions
+    function openScenarioModal(id) {
+      const data = benchmarkScenarios.find(s => s.id === id);
+      if (!data) return;
+
+      document.getElementById('modalTitle').innerHTML = `<span>🩺</span> Scenario ${data.id}: ${data.title}`;
+      document.getElementById('modalQueryText').textContent = `"${data.query}"`;
+      document.getElementById('modalMeditronText').textContent = data.meditron;
+      document.getElementById('modalQwenText').textContent = data.qwen;
+
+      document.getElementById('scenarioModal').classList.add('open');
+    }
+
+    function closeScenarioModal() {
+      document.getElementById('scenarioModal').classList.remove('open');
+    }
+
+    function handleModalBackdropClick(e) {
+      if (e.target.id === 'scenarioModal') {
+        closeScenarioModal();
+      }
+    }
+
     // Touch Swipe Detection
     let startX = 0;
     let startY = 0;
@@ -1368,6 +1893,9 @@
     }, { passive: true });
 
     container.addEventListener('touchend', (e) => {
+      // Ignore swipe when modal is open
+      if (document.getElementById('scenarioModal').classList.contains('open')) return;
+      
       const diffX = startX - e.changedTouches[0].clientX;
       const diffY = startY - e.changedTouches[0].clientY;
       
@@ -1379,6 +1907,12 @@
 
     // Keyboard Navigation
     window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        closeScenarioModal();
+        return;
+      }
+      if (document.getElementById('scenarioModal').classList.contains('open')) return;
+
       if (e.key === 'ArrowRight' || e.key === ' ') nextSlide();
       if (e.key === 'ArrowLeft' || e.key === 'PageUp') prevSlide();
     });
@@ -1392,7 +1926,7 @@
       }
     }
 
-    // Initialize Slide 4
+    // Initialize Slide 4 and Deck state
     activateJourney(0);
     updateDeck();
   </script>
