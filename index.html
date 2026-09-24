@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,7 +8,7 @@
   
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@600;700;800&family=Fira+Code:wght@500;600&display=swap" rel="stylesheet">
 
   <style>
     :root {
@@ -79,7 +80,7 @@
 
     .progress-fill {
       height: 100%;
-      width: 7.69%;
+      width: 5.55%;
       background: linear-gradient(90deg, var(--accent), var(--purple), var(--pink));
       transition: width 0.35s ease;
     }
@@ -253,6 +254,13 @@
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(min(100%, 310px), 1fr));
       gap: 0.85rem;
+      width: 100%;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
+      gap: 0.75rem;
       width: 100%;
     }
 
@@ -1009,7 +1017,7 @@
       <span class="brand-badge">WOGAFH × GAIC</span>
     </div>
     <div class="header-actions">
-      <div class="counter-pill" id="counterPill">01 / 13</div>
+      <div class="counter-pill" id="counterPill">01 / 18</div>
       <button class="icon-btn" onclick="toggleFullscreen()" title="Toggle Fullscreen">⛶</button>
     </div>
   </header>
@@ -1474,7 +1482,7 @@
       </div>
     </section>
 
-    <!-- SLIDE 13: RAW MODEL OUTPUTS BENCHMARK (NEW MINIMALIST OVERLAY) -->
+    <!-- SLIDE 13: RAW MODEL OUTPUTS BENCHMARK (MINIMALIST OVERLAY) -->
     <section class="slide" data-slide="13">
       <div class="badge-tag">Clinical AI Benchmark · 13 Scenarios</div>
       <h2>Empirical Model Responses & Benchmarks</h2>
@@ -1484,6 +1492,192 @@
 
       <div class="scenario-grid" id="scenarioGridContainer">
         <!-- Rendered via JS -->
+      </div>
+    </section>
+
+    <!-- ================= NEW REPORT SLIDES (SLIDES 14 TO 18) ================= -->
+
+    <!-- SLIDE 14: CLINICAL VALIDATION & DOCTOR AUDIT REPORT -->
+    <section class="slide" data-slide="14">
+      <div class="badge-tag">Clinical Governance · Doctor Evaluation</div>
+      <h2>Human-in-the-Loop Clinical Audit (13 Scenarios)</h2>
+      <p class="lead">
+        Certified Medical Officer audit across 13 emergency and outpatient maternal health scenarios, scoring safety from 1 (Dangerous) to 10 (Accurate & Safe).
+      </p>
+
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-icon" style="color: var(--purple);">📊</div>
+          <h3>Quantitative Evaluation Scorecard</h3>
+          <div class="matrix-card">
+            <div class="matrix-row"><span>Human Doctor Ground-Truth</span> <strong style="color:var(--accent);">10.0 / 10</strong></div>
+            <div class="matrix-row"><span>Qwen (Frontier Cloud Model)</span> <strong style="color:var(--accent);">6.8 / 10 🏆</strong></div>
+            <div class="matrix-row"><span>Meditron-7B (4-Bit Local GPU)</span> <strong style="color:var(--rose);">3.6 / 10 ⚠️</strong></div>
+          </div>
+          <ul>
+            <li>• <strong>Meditron-7B Inversion Failure:</strong> Hallucinated negative hCG on ectopic pregnancy; leaked unrelated hyperparathyroidism citations.</li>
+            <li>• <strong>Hardware Bottleneck:</strong> 4-bit Meditron consumed <strong>13.8 GB / 15 GB VRAM (92%)</strong> on T4 GPU with 3+ min latency.</li>
+          </ul>
+        </div>
+
+        <div class="card highlight">
+          <div class="card-icon" style="color: var(--accent);">🩺</div>
+          <h3>Doctor’s Feedback & Triage Guardrails</h3>
+          <p style="color: #fff; font-size: 0.84rem; margin-bottom: 0.4rem;">
+            <em>"AI must act as a safe triage guide, not an autonomous hospital prescriber."</em>
+          </p>
+          <ul>
+            <li>• <strong>Block Autonomous Prescriptions:</strong> The LLM must not prescribe systemic IV/oral antibiotics over chat; it must provide safe first-aid (Paracetamol/ORS) and mandate clinic referral.</li>
+            <li>• <strong>Bedside Empathy:</strong> Maintain a calming tone to prevent unnecessary patient panic when discussing oncological/obstetric red flags.</li>
+            <li>• <strong>Differential Hierarchy:</strong> Prioritize statistical commonalities (e.g. threatened miscarriage) alongside emergencies (ectopic pregnancy).</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 15: SPEECH-TO-TEXT (STT) BENCHMARK REPORT -->
+    <section class="slide" data-slide="15">
+      <div class="badge-tag">Acoustic Benchmark · STT "Ear"</div>
+      <h2>Speech-to-Text: Meta MMS vs. OpenAI Whisper</h2>
+      <p class="lead">
+        Empirical evaluation on native African speech corpora: Google FLEURS Hausa (<code>ha_ng</code>) and open Nigerian Pidgin (<code>pcm</code>).
+      </p>
+
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-icon" style="color: var(--accent);">🎙️</div>
+          <h3>Acoustic Benchmark Scorecard</h3>
+          <div class="matrix-card">
+            <div class="matrix-row"><span>Hausa WER: Meta MMS-1B (`hau`)</span> <strong style="color:var(--accent);">21.74% 🏆 (High Accuracy)</strong></div>
+            <div class="matrix-row"><span>Hausa WER: OpenAI Whisper (Small)</span> <strong style="color:var(--rose);">95.65% ❌ (Phonetic Gibberish)</strong></div>
+            <div class="matrix-row"><span>Pidgin WER: Meta MMS-1B (`pcm`)</span> <strong style="color:var(--accent);">64.29% 🏆 (Native Phonetics)</strong></div>
+            <div class="matrix-row"><span>Pidgin WER: OpenAI Whisper (Small)</span> <strong style="color:var(--rose);">85.71% ❌ (Anglicized Drift)</strong></div>
+          </div>
+          <p style="margin-top:0.4rem; font-size:0.78rem;">
+            Base Whisper suffered from an <strong>Anglicization bias</strong>, forcefully rewriting Pidgin into formal British English while hallucinating words (<em>"an arromba"</em>).
+          </p>
+        </div>
+
+        <div class="card highlight">
+          <div class="card-icon" style="color: var(--cyan);">⚙️</div>
+          <h3>STT Engineering & Adaptation Strategy</h3>
+          <ul>
+            <li>• <strong>Selected Backbone:</strong> <strong>Meta MMS-1B</strong> with modular language-specific adapters (<code>hau</code> and <code>pcm</code>).</li>
+            <li>• <strong>PEFT Adapter Fine-Tuning:</strong> Freeze the 1B Wav2Vec2 encoder and fine-tune only the lightweight <strong>9MB adapter layer (<code>adapter.pcm.safetensors</code>)</strong> on local clinic audio (<30 mins on T4 GPU).</li>
+            <li>• <strong>Inference Optimization:</strong> Export MMS to an <strong>INT8 / ONNX runtime</strong> to drop CPU latency from ~29s down to <strong>sub-second (<0.5s)</strong> execution on cloud instances.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 16: TEXT-TO-SPEECH (TTS) & NATIVE SPEAKER AUDIT -->
+    <section class="slide" data-slide="16">
+      <div class="badge-tag">Speech Synthesis · TTS "Mouth"</div>
+      <h2>Localized Voice Synthesis & Native Speaker Audit</h2>
+      <p class="lead">
+        Synthesizing high-clarity spoken audio notes in Hausa and Nigerian Pidgin using Meta MMS-TTS (VITS Architecture).
+      </p>
+
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-icon" style="color: var(--amber);">🔊</div>
+          <h3>Empirical Synthesis Telemetry</h3>
+          <div class="matrix-card">
+            <div class="matrix-row"><span>Hausa Synthesis Latency</span> <strong style="color:var(--accent);">0.312s (14.2s audio)</strong></div>
+            <div class="matrix-row"><span>Pidgin Synthesis Latency</span> <strong style="color:var(--accent);">0.285s (10.8s audio)</strong></div>
+            <div class="matrix-row"><span>Real-Time Factor (RTF)</span> <strong style="color:var(--accent);">0.022x – 0.026x (Ultra-Fast)</strong></div>
+            <div class="matrix-row"><span>Audio Compression (.ogg)</span> <strong style="color:var(--accent);">< 25 KB (2G/3G Ready)</strong></div>
+          </div>
+          <p style="margin-top:0.4rem; font-size:0.78rem;">
+            Unified VITS architecture generates direct 16 kHz waveforms without requiring an external HiFi-GAN vocoder.
+          </p>
+        </div>
+
+        <div class="card highlight">
+          <div class="card-icon" style="color: var(--pink);">👂</div>
+          <h3>Native Speaker Audit & Adaptation</h3>
+          <ul>
+            <li>• <strong>Hausa (`hau`) — High Fidelity:</strong> Verified by in-house WOGAFH native speakers as authentic, calm, and clinically reassuring.</li>
+            <li>• <strong>Pidgin (`pcm`) — Good with Minor Artifacts:</strong> Authentic accent, but native listeners noted a slight mid-sentence duration pause and a phonetic slip on <em>"gin"</em>.</li>
+            <li>• <strong>Retraining Roadmap:</strong> Fine-tune the VITS text encoder on <strong>1–2 hours of clean audio recorded and verified by our native speaker panel</strong> with G2P text normalization.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 17: RAG EMBEDDINGS & ASYMMETRIC TRANSLATION REPORT -->
+    <section class="slide" data-slide="17">
+      <div class="badge-tag">Knowledge & Language Bridge · RAG & NLLB</div>
+      <h2>RAG Embeddings & Asymmetric Dialect Routing</h2>
+      <p class="lead">
+        Empirical vector retrieval over 2016/2022 Nigerian STGs and dialect translation evaluation.
+      </p>
+
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-icon" style="color: var(--cyan);">📚</div>
+          <h3>RAG Benchmark: all-MiniLM-L6-v2 on Render</h3>
+          <div class="matrix-card">
+            <div class="matrix-row"><span>Top-1 Retrieval Accuracy</span> <strong style="color:var(--accent);">75.0% (3/4 Chunks Matched)</strong></div>
+            <div class="matrix-row"><span>bge-small Accuracy</span> <strong style="color:var(--rose);">50.0% (Misrouted Eclampsia)</strong></div>
+            <div class="matrix-row"><span>MiniLM Latency (CPU)</span> <strong style="color:var(--accent);">26.17 ms (1.9x faster)</strong></div>
+            <div class="matrix-row"><span>Memory Footprint on Render</span> <strong style="color:var(--accent);">< 120 MB RAM total</strong></div>
+          </div>
+          <p style="margin-top:0.4rem; font-size:0.78rem;">
+            Standalone FastAPI microservice on Render pre-indexes guidelines in memory at startup for sub-30ms retrieval with zero API fees.
+          </p>
+        </div>
+
+        <div class="card highlight">
+          <div class="card-icon" style="color: var(--purple);">🔀</div>
+          <h3>The Asymmetric Routing Breakthrough</h3>
+          <ul>
+            <li>• <strong>Qwen Pidgin Mastery:</strong> Qwen translated and reasoned over Pidgin with <strong>100% symptom accuracy</strong> (bypassing separate translation, saving 20s latency).</li>
+            <li>• <strong>Qwen Hausa Failure:</strong> Qwen hallucinated Hausa pregnancy emergencies as <em>"cough and stomach ache"</em>.</li>
+            <li>• <strong>Asymmetric Routing:</strong> Language ID (LID) routes <strong>Pidgin directly to Qwen</strong>, while routing <strong>Hausa through Meta NLLB-200 / pre-translated STGs</strong> to protect clinical safety.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 18: MASTER 5-LAYER PRODUCTION BLUEPRINT -->
+    <section class="slide" data-slide="18">
+      <div class="badge-tag">System Architecture · 5-Layer Blueprint</div>
+      <h2>Master Production Pipeline & Deployment</h2>
+      <p class="lead">
+        The complete, decoupled compound AI system engineered for low-bandwidth primary healthcare delivery across Nigeria.
+      </p>
+
+      <div class="grid-compartments">
+        <div class="card">
+          <div class="card-icon" style="color: var(--accent);">1. Engines</div>
+          <h3>Model Selection</h3>
+          <p>Meta MMS-1B (STT), Meta MMS-TTS (Voice), all-MiniLM-L6-v2 (RAG), Qwen via LiteLLM Bedrock Gateway, Meta NLLB-200 (Bridge).</p>
+        </div>
+
+        <div class="card">
+          <div class="card-icon" style="color: var(--cyan);">2. Bridges</div>
+          <h3>Integration Layer</h3>
+          <p>Code for Africa LiteLLM Gateway proxy (<code>litellm.codeforafrica.org</code>) and decoupled FastAPI microservices on Render.</p>
+        </div>
+
+        <div class="card">
+          <div class="card-icon" style="color: var(--purple);">3. Knowledge</div>
+          <h3>Cognitive Core</h3>
+          <p>Full 2016/2022 Nigerian STG corpus indexed in vector memory; doctor-approved prompt bounding first aid and mandatory clinic referral.</p>
+        </div>
+
+        <div class="card">
+          <div class="card-icon" style="color: var(--rose);">4. Safety</div>
+          <h3>Guardrail & Handover</h3>
+          <p>Sub-5ms regex filter intercepts acute emergencies (PPH, eclampsia) and triggers immediate Health Center Referral Cards.</p>
+        </div>
+
+        <div class="card highlight">
+          <div class="card-icon" style="color: var(--amber);">5. Delivery</div>
+          <h3>Multi-Platform UI</h3>
+          <p>Telegram Bot (Telethon), Mobile App, and Web Portal; PostgreSQL anonymized query logging in compliance with NDPR data protection.</p>
+        </div>
       </div>
     </section>
 
