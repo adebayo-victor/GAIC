@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SmartHealth AI — Central LLM Clinical Benchmark & Evaluation Report</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@600;700;800&family=Fira+Code:wght@500;600&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --bg: #07090e;
+      --card: rgba(18, 24, 38, 0.94);
+      --border: rgba(255, 255, 255, 0.12);
+      --accent: #10b981;
+      --accent-glow: rgba(16, 185, 129, 0.35);
+      --purple: #8b5cf6;
+      --cyan: #38bdf8;
+      --rose: #f43f5e;
+      --text: #f8fafc;
+      --muted: #94a3b8;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; }
+    body { background: var(--bg); color: var(--text); padding: 2rem 1rem; max-width: 1100px; margin: 0 auto; }
+    header { border-bottom: 1px solid var(--border); padding-bottom: 1.5rem; margin-bottom: 2rem; }
+    h1 { font-family: 'Space Grotesk', sans-serif; font-size: clamp(1.8rem, 3.5vw, 2.5rem); margin-bottom: 0.5rem; }
+    .badge { background: var(--accent); color: #030712; padding: 0.2rem 0.6rem; border-radius: 6px; font-weight: 800; font-size: 0.75rem; text-transform: uppercase; }
+    
+    .grid-scorecard { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1rem; margin-bottom: 2rem; }
+    .score-box { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 1.25rem; }
+    .score-num { font-family: 'Space Grotesk', sans-serif; font-size: 2rem; font-weight: 800; }
+    
+    .cases-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1rem; margin-bottom: 2rem; }
+    .case-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 1rem; cursor: pointer; transition: all 0.2s; }
+    .case-card:hover { border-color: var(--accent); transform: translateY(-2px); }
+    
+    /* Modal */
+    .modal-backdrop { position: fixed; inset: 0; background: rgba(4,7,14,0.85); backdrop-filter: blur(12px); display: none; place-items: center; padding: 1rem; z-index: 100; }
+    .modal-backdrop.active { display: grid; }
+    .modal-content { background: #0e1526; border: 1px solid var(--border); border-radius: 16px; max-width: 850px; width: 100%; max-height: 90vh; overflow-y: auto; padding: 1.5rem; }
+    .modal-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding-bottom: 0.75rem; margin-bottom: 1rem; }
+    .close-btn { background: rgba(255,255,255,0.1); border: none; color: #fff; width: 30px; height: 30px; border-radius: 6px; cursor: pointer; font-size: 1.1rem; }
+    
+    .resp-box { background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: 8px; padding: 0.85rem; margin-top: 0.65rem; font-size: 0.88rem; line-height: 1.55; white-space: pre-line; }
+    .resp-box.meditron { border-left: 3px solid var(--purple); }
+    .resp-box.qwen { border-left: 3px solid var(--accent); }
+    .resp-box.doctor { border-left: 3px solid var(--cyan); background: rgba(56, 189, 248, 0.05); }
+
+    .sources-bar { background: rgba(16, 185, 129, 0.08); border: 1px solid rgba(16,185,129,0.3); border-radius: 10px; padding: 0.75rem 1.25rem; display: flex; gap: 1rem; flex-wrap: wrap; align-items: center; margin-top: 2rem; font-size: 0.85rem; }
+    .sources-bar a { color: var(--cyan); text-decoration: none; font-weight: 600; }
+  </style>
+</head>
+<body>
+
+  <header>
+    <span class="badge">GAIC COHORT 2 · MILESTONE REPORT</span>
+    <h1 style="margin-top: 0.5rem;">Central LLM Clinical Benchmark & Doctor Validation</h1>
+    <p style="color: var(--muted); font-size: 0.95rem;">
+      Empirical audit of 13 maternal health scenarios: Meditron-7B (4-bit Local GPU) vs. Qwen (Frontier Cloud) validated by a Certified Medical Officer.
+    </p>
+  </header>
+
+  <!-- Scorecards -->
+  <div class="grid-scorecard">
+    <div class="score-box">
+      <div style="color: var(--muted); font-size: 0.8rem; text-transform: uppercase;">Human Ground Truth</div>
+      <div class="score-num" style="color: #fff;">10.0 / 10</div>
+      <div style="font-size: 0.8rem; color: var(--muted);">Certified Medical Officer Baseline</div>
+    </div>
+    <div class="score-box" style="border-color: var(--accent);">
+      <div style="color: var(--accent); font-size: 0.8rem; text-transform: uppercase;">Qwen (Frontier Cloud)</div>
+      <div class="score-num" style="color: var(--accent);">6.8 / 10</div>
+      <div style="font-size: 0.8rem; color: var(--muted);">Clinically Safe · Caught all red flags</div>
+    </div>
+    <div class="score-box" style="border-color: var(--rose);">
+      <div style="color: var(--rose); font-size: 0.8rem; text-transform: uppercase;">Meditron-7B (4-Bit Local)</div>
+      <div class="score-num" style="color: var(--rose);">3.6 / 10</div>
+      <div style="font-size: 0.8rem; color: var(--muted);">Severe Hallucinations · Inverted hCG</div>
+    </div>
+  </div>
+
+  <!-- Cases Grid -->
+  <h2 style="font-family: 'Space Grotesk'; margin-bottom: 1rem;">Click Any Scenario to Inspect Detailed Responses:</h2>
+  <div class="cases-grid" id="casesContainer"></div>
+
+  <!-- Sources -->
+  <div class="sources-bar">
+    <strong>🔗 Live Review Artifacts:</strong>
+    <a href="https://docs.google.com/forms/d/1fmKjy7xPHRwPeXjTgw0Rm65gNRvjhIYL4KU9Nlmgtr0/edit?pli=1#response=ACYDBNgMw2zn_YREgfSmmVN_-gpOMWZKRrtCRBWqpl9k9bRnIA8e6axNSCA3qEfj0-EN-as" target="_blank">📋 Evaluation Google Form</a>
+    <span>•</span>
+    <a href="https://drive.google.com/drive/folders/1vHQ7_fFTN5JYYZfni5HOVU7VUJl2t3kx?usp=drive_link" target="_blank">📄 Doctor's Review PDF (Google Drive)</a>
+  </div>
+
+  <!-- Modal -->
+  <div class="modal-backdrop" id="modalBackdrop" onclick="closeModal(event)">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 id="mTitle" style="font-family: 'Space Grotesk';">Scenario Inspection</h3>
+        <button class="close-btn" onclick="document.getElementById('modalBackdrop').classList.remove('active')">✕</button>
+      </div>
+      <div style="background: rgba(56,189,248,0.08); border: 1px solid rgba(56,189,248,0.2); padding: 0.75rem 1rem; border-radius: 8px; margin-bottom: 1rem;">
+        <strong style="color: var(--cyan); font-size: 0.75rem; text-transform: uppercase;">Patient Query:</strong>
+        <p id="mQuery" style="font-size: 0.9rem; font-style: italic; color: #fff; margin-top: 0.2rem;"></p>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+        <div>
+          <strong style="color: var(--cyan); font-size: 0.75rem; text-transform: uppercase;">🩺 Doctor's Ground-Truth Evaluation:</strong>
+          <div class="resp-box doctor" id="mDoctor"></div>
+        </div>
+        <div>
+          <strong style="color: var(--accent); font-size: 0.75rem; text-transform: uppercase;">⚡ Qwen (Frontier Model) Output:</strong>
+          <div class="resp-box qwen" id="mQwen"></div>
+        </div>
+        <div>
+          <strong style="color: var(--purple); font-size: 0.75rem; text-transform: uppercase;">🧠 Meditron-7B (4-Bit Local — Form Summary):</strong>
+          <div class="resp-box meditron" id="mMeditron"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const scenarios = [
+      {
+        id: 1, title: "Suspected Ectopic Pregnancy",
+        query: "I missed my period 3 weeks ago and my home pregnancy test is positive. Since yesterday, I have had sharp pain localized to the right side of my lower abdomen, accompanied by light brownish vaginal spotting. Can I take Paracetamol and antispasmodics for the pain?",
+        meditron: "• Claims negative urine hCG rules out early pregnancy (contradicting prompt) but suggests ultrasound to check for ectopic/hemoperitoneum.\n• Asserts low progesterone indicates follicular phase and withdrawal bleeding will occur soon; advises seeking care only if heavy bleeding persists.\n\nScore: 3 / 10",
+        qwen: "- Triage Level: Critical Emergency\n- Danger Signs: Positive pregnancy test + unilateral lower abdominal pain + brownish spotting → high suspicion for ectopic pregnancy.\n- Action Plan: Immediate emergency transfer for quantitative β-hCG and transvaginal ultrasound; surgical emergency if unstable.\n\nScore: 6 / 10",
+        doctor: "A missed period, positive test with right-sided pain & spotting is not enough to make ectopic 1st diagnosis. The first diagnosis should be threatened miscarriage, then ectopic... but any bleeding in pregnancy is an emergency requiring facility evaluation."
+      },
+      {
+        id: 2, title: "Secondary Postpartum Hemorrhage & Shock",
+        query: "I delivered a baby boy at home 9 days ago. Today, my bleeding suddenly became very heavy with large blood clots, and I feel dizzy and lightheaded whenever I stand up. My family suggested drinking hot ginger tea. What should I do?",
+        meditron: "• Diagnoses secondary PPH from Retained Products of Conception (RPOC) due to unassisted home delivery.\n• Recommends manual placental removal, oxytocics, transfusion, and close monitoring. (Appended unrelated hyperparathyroidism citation).\n\nScore: 3 / 10",
+        qwen: "- Triage Level: Critical Emergency\n- Myths Addressed: Ginger tea does not treat hemorrhage and delays critical care.\n- Action Plan: Immediate hospital transfer; assess vitals/pallor; initiate IV fluids/blood transfusion; emergency uterine evacuation (MVA/D&C).\n\nScore: 7 / 10",
+        doctor: "Qwen model is very much on point. Any heavy bleeding postpartum is a PPH and should always be treated as emergency."
+      },
+      {
+        id: 3, title: "Severe Pre-Eclampsia / Impending Eclampsia",
+        query: "I am 32 weeks pregnant. For the past two days, my face and feet have become severely swollen. I also have a persistent, throbbing headache that does not go away, along with flashes of light and blurry vision. What painkiller is safe for this headache?",
+        meditron: "• Advises seeking immediate emergency care.\n• States acetaminophen (Tylenol) can be taken up to 4× daily after doctor consult; heavily warns against NSAIDs (Ibuprofen, Aspirin) and cold remedies due to fetal toxicity.\n\nScore: 4 / 10",
+        qwen: "- Triage Level: Critical Emergency\n- Myths Addressed: Taking painkillers masks underlying pathology and delays life-saving care.\n- Action Plan: Immediate hospital admission; urgent BP check, urine protein testing, LFTs/platelets; administer Magnesium Sulfate to prevent seizures.\n\nScore: 7 / 10",
+        doctor: "Qwen nailed it. Swelling plus persistent headache and blurry vision is an emergency needing BP check, urine protein check, and urgent attention."
+      },
+      {
+        id: 4, title: "Premature Rupture of Membranes (PROM)",
+        query: "I am 7 months pregnant (30 weeks). Clear, watery fluid without any pain has been trickling down my legs since early this morning, soaking through my clothing. Did my water break, or is this just heavy normal pregnancy discharge?",
+        meditron: "• Suggests PROM, but asserts clear fluid indicates intact membrane integrity.\n• Recommends immediate medical care, but alternatively suggests taking acetaminophen at home for fever and monitoring temperature before traveling.\n\nScore: 3 / 10",
+        qwen: "- Triage Level: Urgent Referral (PPROM)\n- Action Plan: Avoid digital vaginal exams; perform sterile speculum exam (nitrazine/ferning); transfer for prophylactic antibiotics and corticosteroids for fetal lungs.\n\nScore: 7 / 10",
+        doctor: "Qwen is accurate. Clear fluid should be treated as amniotic fluid. Woman must use a pad, get immediate care, ultrasound, and sterile speculum exam."
+      },
+      {
+        id: 5, title: "Antepartum Hemorrhage (Placenta Previa)",
+        query: "I am 8 months pregnant. I woke up this morning to bright red vaginal bleeding, but I do not have any abdominal pain or labor contractions. Should I wait until labor pains start before going to the clinic?",
+        meditron: "• Fabricated History: Hallucinates that patient has had spotting for weeks, LMP was 4 months ago, and had post-coital bleeding 2 days ago.\n• Lacks explicit emergency triage directives or advice on waiting for labor.\n\nScore: 3 / 10",
+        qwen: "- Triage Level: Critical Emergency (suspected placenta previa)\n- Action Plan: Strict contraindication to digital vaginal exam; immediate hospital transfer for ultrasound localization and cesarean preparation.\n\nScore: 7 / 10",
+        doctor: "Any bleeding at any stage of pregnancy is an emergency and patient needs to visit hospital immediately."
+      },
+      {
+        id: 6, title: "Emergency Contraception Misconceptions",
+        query: "I had unprotected sex two days ago. A friend suggested drinking dry gin mixed with salt, or taking high doses of Ampicillin/Cloxacillin capsules to prevent pregnancy. Will this prevent pregnancy?",
+        meditron: "• Confirms pregnancy risk within the 72-hour fertile window.\n• Recommends Levonorgestrel as primary option (delays ovulation); mentions Copper IUDs.\n• Advises on safe use without alcohol side effects or antibiotic drug interactions.\n\nScore: 4 / 10",
+        qwen: "- Triage Level: Outpatient Care / Health Education\n- Myths Addressed: Explicitly debunks gin + salt (toxic) and Ampiclox (antibiotics do not prevent pregnancy; causes resistance).\n- Action Plan: Levonorgestrel within 72h, Ulipristal within 120h, or Copper IUD within 5 days.\n\nScore: 6 / 10",
+        doctor: "Drinking dry gin mixed with salt or high doses of ampiclox will not prevent pregnancy. They cause adverse effects/resistance. Patient is within the 3-day window for Postinor."
+      },
+      {
+        id: 7, title: "Injectable Contraceptive (Depo) Amenorrhea",
+        query: "I received the 3-month contraceptive injection (Depo-Provera) 5 months ago, and my menstrual period has stopped completely. People tell me the blood is accumulating inside my abdomen and will cause fibroids. What medication can I take to induce my period?",
+        meditron: "• Reassures amenorrhea is a common, normal side effect of progestin-induced ovarian suppression and does not require treatment.\n• Advises seeking care only if heavy bleeding exceeds 1 week to rule out fibroids/polyps.\n\nScore: 6 / 10",
+        qwen: "- Triage Level: Health Education / Counseling\n- Myths Addressed: Debunks the myth that 'bad blood accumulates inside the abdomen' to cause fibroids.\n- Action Plan: Reassure that absence of bleeding is safe and expected on Depo-Provera; no period-inducing drugs needed.\n\nScore: 6 / 10",
+        doctor: "Both models are good. Suppression of menses is normal on progestin-only contraception."
+      },
+      {
+        id: 8, title: "Infertility Triage & Herbal Cleansers",
+        query: "My husband and I have been trying to conceive for 18 months without success. My relatives claim it is entirely my fault because I had painful periods in my youth. Which herbal uterine cleansers should I take to prepare my womb for pregnancy?",
+        meditron: "• Rejects 'uterine cleansing' herbs, warning of vasoconstriction, oxidative stress, hepatotoxicity, and lack of evidence.\n• Attributes potential infertility to chronic pelvic inflammation and scarring from endometriosis/adenomyosis.\n\nScore: 5 / 10",
+        qwen: "- Triage Level: Outpatient Care / Infertility Workup\n- Myths Addressed: Rejects blaming woman solely (male factor accounts for 40–50%); warns against unregulated herbal cleansers.\n- Action Plan: Semen analysis for male partner, ovulation tracking, hormonal profile, and HSG for tubal patency.\n\nScore: 6 / 10",
+        doctor: "Infertility involves both partners. Husband needs seminal analysis; wife needs pelvic scan, HSG, and hormone profile. Avoid cleansers."
+      },
+      {
+        id: 9, title: "Pelvic Inflammatory Disease (PID)",
+        query: "For the past three weeks, I have had foul-smelling yellow vaginal discharge, severe lower abdominal pain, deep pain during sexual intercourse, and a low-grade fever. Can I buy a single course of Ciprofloxacin over the counter to cure this?",
+        meditron: "• Diagnoses PID and details common pathogens (N. gonorrhoeae, C. trachomatis, M. genitalium).\n• Emphasizes single-agent treatment is inadequate and that comprehensive screening and multi-antibiotic regimens are required.\n\nScore: 4 / 10",
+        qwen: "- Triage Level: Urgent Referral / Outpatient Care\n- Action Plan: Treat empirically with dual therapy: IM Ceftriaxone + oral Doxycycline ± Metronidazole; STI partner notification.\n\nScore: 5 / 10",
+        doctor: "Both models not accurate enough. Discourage OTC meds; patient can take Paracetamol or Diclofenac as first aid for pain and see a doctor for pelvic ultrasound and high vaginal swab MCS."
+      },
+      {
+        id: 10, title: "Recurrent Candidiasis vs. Antiseptic Douching",
+        query: "I have thick, white, curd-like vaginal discharge with intense itching. I have been washing inside my vagina twice daily with antiseptic liquid diluted in warm water and scented feminine soaps, but the itching is worsening. What should I do?",
+        meditron: "• Misclassifies symptoms as Bacterial Vaginosis (BV) rather than yeast/candidiasis.\n• Notes intravaginal products disrupt healthy flora; prescribes oral Metronidazole 750mg BID for 7 days.\n\nScore: 4 / 10",
+        qwen: "- Triage Level: Outpatient Care (Vulvovaginal Candidiasis)\n- Action Plan: Cease all internal washing; clean external vulva with plain water only; treat with topical/oral antifungals (Clotrimazole, Fluconazole 150mg).\n\nScore: 6 / 10",
+        doctor: "Model 2 is good. Stop internal washing and encourage patient to use probiotics containing lactobacilli."
+      },
+      {
+        id: 11, title: "Post-Coital Bleeding & Cervical Screening",
+        query: "I am 43 years old. For the past two months, whenever my husband and I have sexual relations, I notice light bleeding and fresh blood stains on the bedding. I feel no pain. Is this just friction, or should I be concerned?",
+        meditron: "• Inaccurately reassures patient that bleeding and discharge are normal pregnancy leukorrhea.\n• Suggests seeing a doctor only if discharge becomes foul/excessive.\n\nScore: 3 / 10",
+        qwen: "- Triage Level: Urgent Referral\n- Action Plan: Immediate speculum examination, Pap smear/cervical screening, and transvaginal ultrasound to rule out cervical and endometrial pathology.\n\nScore: 6 / 10",
+        doctor: "It's a case of post coital bleeding, common symptom of cervical dysplasia. Red flag for screening. Most important to reassure the patient and not make the patient panic unnecessarily."
+      },
+      {
+        id: 12, title: "Severe Secondary Dysmenorrhea / Endometriosis",
+        query: "I am 21 years old. Every month, my menstrual cramps are so debilitating that I vomit, experience severe shaking, and miss work/classes for three days. I was told that this pain is normal for all women and will only resolve after childbirth. Is there any way to evaluate if something is wrong?",
+        meditron: "• Suggests considering pregnancy or endometriosis, but claims endometriosis does not require treatment until fertility is compromised later in life.\n• Drifts into non-clinical discussion on rural poverty and diabetes.\n\nScore: 4 / 10",
+        qwen: "- Triage Level: Outpatient Care\n- Action Plan: Gynecological evaluation and pelvic ultrasound; trial of NSAIDs (Mefenamic acid) and hormonal contraception; laparoscopic referral if unresolved.\n\nScore: 6 / 10",
+        doctor: "Patient should see a gynecologist for proper evaluation of endometriosis. She can take NSAIDs like mefenamic acid or piroxicam for the pain."
+      },
+      {
+        id: 13, title: "Postmenopausal Bleeding (Endometrial Pathology)",
+        query: "I am 56 years old, and my periods ceased completely 4 years ago. Last week, I unexpectedly experienced fresh vaginal bleeding resembling a regular menstrual cycle for 4 days. My acquaintances suggested my fertility is returning. Is this normal?",
+        meditron: "• Misdiagnoses bleeding as normal perimenopause or natural menopausal transition.\n• Explains follicular depletion, estrogen decline, and vasomotor symptoms; omits diagnostic workup for malignancy.\n\nScore: 4 / 10",
+        qwen: "- Triage Level: Critical Emergency\n- Action Plan: Immediate transvaginal ultrasound (endometrial thickness) and endometrial biopsy to rule out endometrial carcinoma/hyperplasia.\n\nScore: 6 / 10",
+        doctor: "Any postmenopausal bleeding should be evaluated for endometrial and cervical cancer. Patient needs transvaginal ultrasound and cervical screening. Debunk the rumor of returning fertility."
+      }
+    ];
+
+    const container = document.getElementById('casesContainer');
+    scenarios.forEach(sc => {
+      const card = document.createElement('div');
+      card.className = 'case-card';
+      card.onclick = () => openCase(sc.id);
+      card.innerHTML = `
+        <div style="font-size: 0.7rem; font-weight: 800; color: var(--accent); text-transform: uppercase;">Case ${sc.id < 10 ? '0' + sc.id : sc.id}</div>
+        <div style="font-weight: 700; font-size: 0.92rem; color: #fff; margin: 0.3rem 0;">${sc.title}</div>
+        <div style="font-size: 0.78rem; color: var(--muted); line-height: 1.4;">${sc.query.substring(0, 85)}...</div>
+      `;
+      container.appendChild(card);
+    });
+
+    function openCase(id) {
+      const sc = scenarios.find(s => s.id === id);
+      if (!sc) return;
+      document.getElementById('mTitle').textContent = `Scenario ${sc.id}: ${sc.title}`;
+      document.getElementById('mQuery').textContent = `"${sc.query}"`;
+      document.getElementById('mDoctor').textContent = sc.doctor;
+      document.getElementById('mQwen').textContent = sc.qwen;
+      document.getElementById('mMeditron').textContent = sc.meditron;
+      document.getElementById('modalBackdrop').classList.add('active');
+    }
+
+    function closeModal(e) {
+      if (e.target.id === 'modalBackdrop') {
+        document.getElementById('modalBackdrop').classList.remove('active');
+      }
+    }
+  </script>
+</body>
+</html>
